@@ -3,6 +3,7 @@ package com.example.microserviciogestionusuarios.security.entities;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,10 +22,11 @@ public class UserMain implements UserDetails {
         this.authorities = authorities;
     }
 
-    public static UserMain build(User user) {
-        List<GrantedAuthority> authorities =
-                Collections.singletonList(new SimpleGrantedAuthority(user.getRole().getRolename().name()));
-        return new UserMain(user.getEmail(), authorities);
+    public static UserMain build(String email, List<String> tiposUsuarios) {
+        List<GrantedAuthority> authorities = tiposUsuarios.stream()
+        .map(SimpleGrantedAuthority::new)
+        .collect(Collectors.toList());
+        return new UserMain(email, authorities);
     }
 
     @Override

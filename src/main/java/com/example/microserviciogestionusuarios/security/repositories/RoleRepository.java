@@ -1,12 +1,12 @@
-package com.example.microserviciogestionusuarios.security.repositories;
+// package com.example.microserviciogestionusuarios.security.repositories;
 
-import java.util.Optional;
+// import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.microserviciogestionusuarios.security.entities.Role;
-import com.example.microserviciogestionusuarios.security.enums.RoleName;
+// import com.example.microserviciogestionusuarios.security.entities.Role;
+// import com.example.microserviciogestionusuarios.security.enums.RoleName;
 
-public interface RoleRepository extends JpaRepository<Role, Integer> {
-    Optional<Role> findByRolename(RoleName rolename);
-}
+// public interface RoleRepository extends JpaRepository<Role, Integer> {
+//     Optional<Role> findByRolename(RoleName rolename);
+// }

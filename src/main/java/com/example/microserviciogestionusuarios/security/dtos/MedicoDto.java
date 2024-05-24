@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 public class MedicoDto {
-    private int idMedico;
 
     private String nombre;
 
@@ -17,7 +16,7 @@ public class MedicoDto {
 
     private String celular;
 
-    private String correo;
+    private String email;
 
     private float añosExperiencia;
 

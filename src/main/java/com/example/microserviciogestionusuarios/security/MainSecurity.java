@@ -43,8 +43,10 @@ public class MainSecurity {
             return corsConfiguration;
         }).and().csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/auth/sign-up",
-                        "/auth/sign-in")
+                .requestMatchers("/auth/registro-paciente",
+                "/auth/registro-medico",
+                "/auth/registro-administrador",
+                        "/auth/sign-in","/manage/*")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtEntryPoint)

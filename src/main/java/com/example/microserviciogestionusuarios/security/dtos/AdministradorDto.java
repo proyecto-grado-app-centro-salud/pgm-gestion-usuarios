@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 public class AdministradorDto {
-    private int idAdministrador;
 
     private String nombre;
 
@@ -19,7 +18,7 @@ public class AdministradorDto {
 
     private String cargo;
 
-    private String correo;
+    private String email;
 
     private String grupoSanguineo;
 

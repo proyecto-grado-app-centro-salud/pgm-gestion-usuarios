@@ -1,5 +1,7 @@
 package com.example.microserviciogestionusuarios.security.controller;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +20,9 @@ import com.example.microserviciogestionusuarios.security.dtos.AdministradorDto;
 import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
-import com.example.microserviciogestionusuarios.security.dtos.SignUpDto;
-import com.example.microserviciogestionusuarios.security.entities.User;
+import com.example.microserviciogestionusuarios.security.entities.AdministradorEntity;
+import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
+import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
 import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
 import com.example.microserviciogestionusuarios.security.services.UserService;
 
@@ -49,10 +52,10 @@ public class AuthController {
     //     return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
     // }
     @PostMapping("/registro-paciente")    
-    public ResponseEntity<ResponseMessageDto> signUpPaciente(@RequestBody @Valid PacienteDto pacienteDto,BindingResult bindingResult){
-        if(bindingResult.hasFieldErrors()){
-            return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<ResponseMessageDto> signUpPaciente(@RequestBody PacienteDto pacienteDto){
+        // if(bindingResult.hasFieldErrors()){
+        //     return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        // }
         userService.signUpPaciente(pacienteDto);
         return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
     }
@@ -85,10 +88,49 @@ public class AuthController {
         return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto(accessToken), HttpStatus.OK);
     }
 
+    // @GetMapping("/user-details")
+    // public Optional<User> getUserDetails(){
+    //     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    //     String email = userDetails.getUsername();
+    //     return userService.findByEmail(email);
+    // }
+    
     @GetMapping("/user-details")
-    public Optional<User> getUserDetails(){
+    public List<String> getUserDetails(){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
-        return userService.findByEmail(email);
+        List<String> roles = new ArrayList<>();
+        if (userService.findByEmailPaciente(email).isPresent()) {
+            roles.add("PACIENTE");
+        }
+        
+        if (userService.findByEmailMedico(email).isPresent()) {
+            roles.add("MEDICO");
+        }
+        
+        if (userService.findByEmailAdministrador(email).isPresent()) {
+            roles.add("ADMINISTRADOR");
+        }
+        return roles;
+    }
+    @GetMapping("/detalles-paciente")
+    public Optional<PacienteEntity> getPacienteDetail(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        return userService.findByEmailPaciente(email);
+    }
+
+    @GetMapping("/detalles-medico")
+    public Optional<MedicoEntity> getMedicoDetails(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        return userService.findByEmailMedico(email);
+    }
+
+    @GetMapping("/detalles-administrador")
+    public Optional<AdministradorEntity> getAdmnistradorDetails(){
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String email = userDetails.getUsername();
+        return userService.findByEmailAdministrador(email);
     }
 }

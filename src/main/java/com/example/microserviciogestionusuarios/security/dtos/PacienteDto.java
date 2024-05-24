@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter @Setter
 @NoArgsConstructor
 public class PacienteDto {
-    private int idPaciente;
 
     private String apellidoPaterno;
 

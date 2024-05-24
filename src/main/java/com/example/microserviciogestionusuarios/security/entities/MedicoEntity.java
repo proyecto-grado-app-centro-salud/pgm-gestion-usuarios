@@ -30,8 +30,8 @@ public class MedicoEntity {
     @Column(name = "celular")
     private String celular;
 
-    @Column(name = "correo")
-    private String correo;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "años_experiencia")
     private float añosExperiencia;

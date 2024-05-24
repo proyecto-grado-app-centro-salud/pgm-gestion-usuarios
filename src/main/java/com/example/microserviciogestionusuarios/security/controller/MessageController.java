@@ -13,15 +13,21 @@ import com.example.microserviciogestionusuarios.dtos.ResponseMessageDto;
 @RequestMapping("/message")
 public class MessageController {
 
-    @GetMapping("/user-message")
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    public ResponseEntity<ResponseMessageDto> userMessage() {
-        return new ResponseEntity<>(new ResponseMessageDto("El usuario tiene el rol usuario"), HttpStatus.OK);
+    @GetMapping("/paciente-message")
+    @PreAuthorize("hasAuthority('PACIENTE')")
+    public ResponseEntity<ResponseMessageDto> obtenerMensajePaciente() {
+        return new ResponseEntity<>(new ResponseMessageDto("El usuario tiene el rol paciente"), HttpStatus.OK);
     }
 
-    @GetMapping("/admin-message")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<ResponseMessageDto> adminMessage() {
-        return new ResponseEntity<>(new ResponseMessageDto("El usuario tiene el rol admin"), HttpStatus.OK);
+    @GetMapping("/medico-message")
+    @PreAuthorize("hasAuthority('MEDICO')")
+    public ResponseEntity<ResponseMessageDto> obtenerMensajeMedico() {
+        return new ResponseEntity<>(new ResponseMessageDto("El usuario tiene el rol medico"), HttpStatus.OK);
+    }
+
+    @GetMapping("/administrador-message")
+    @PreAuthorize("hasAuthority('ADMINISTRADOR')")
+    public ResponseEntity<ResponseMessageDto> obtenerMensajeAdministrador() {
+        return new ResponseEntity<>(new ResponseMessageDto("El usuario tiene el rol administrador"), HttpStatus.OK);
     }
 }

@@ -1,11 +1,11 @@
-package com.example.microserviciogestionusuarios.security.repositories;
+// package com.example.microserviciogestionusuarios.security.repositories;
 
-import java.util.Optional;
+// import java.util.Optional;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+// import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.microserviciogestionusuarios.security.entities.User;
+// import com.example.microserviciogestionusuarios.security.entities.User;
 
-public interface UserRepository extends JpaRepository<User, String>{
-    Optional<User> findByEmail(String email);
-}
+// public interface UserRepository extends JpaRepository<User, String>{
+//     Optional<User> findByEmail(String email);
+// }

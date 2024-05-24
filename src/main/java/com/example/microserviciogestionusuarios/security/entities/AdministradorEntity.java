@@ -35,8 +35,8 @@ public class AdministradorEntity {
     @Column(name = "cargo")
     private String cargo;
 
-    @Column(name = "correo")
-    private String correo;
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "grupo_sanguineo")
     private String grupoSanguineo;

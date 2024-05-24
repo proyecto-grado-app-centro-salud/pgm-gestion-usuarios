@@ -11,7 +11,6 @@ import java.net.URL;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 
-
 public class AwsCognitoRSAKeyProvider implements RSAKeyProvider {
     private final URL awsStoreUrl;
     private final JwkProvider provider;

@@ -56,7 +56,7 @@ public class UserService {
         user.setName(signUpDto.getName());
         user.setLastname(signUpDto.getLastname());
         user.setEmail(signUpDto.getEmail());
-        user.setRole(roleService.findByRoleName(RoleName.ROLE_USER).get());
+        user.setRole(roleService.findByRoleName(RoleName.ROLE_ADMIN).get());
         userRepository.save(user);
     }
     public String signInUser(SignInDto signInDto){

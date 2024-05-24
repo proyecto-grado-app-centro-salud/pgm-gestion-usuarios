@@ -1,5 +1,5 @@
 package com.example.microserviciogestionusuarios.security.jwt;
-// import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
+import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
 
 
 import com.auth0.jwt.JWT;
@@ -10,14 +10,14 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.RSAKeyProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 
-@Component
 @Slf4j
+@Component
 public class JwtProvider {
 
-    @Value(value = "${aws.cognito.identityPoolUrl}")
+    @Value(value = "${aws.cognito.identifyPoolUrl}")
     private String identityPoolUrl;
 
     @Value(value = "${aws.cognito.region}")

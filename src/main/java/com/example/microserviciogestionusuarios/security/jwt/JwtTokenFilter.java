@@ -1,6 +1,5 @@
 package com.example.microserviciogestionusuarios.security.jwt;
 
-// import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,6 +7,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
+import com.example.microserviciogestionusuarios.security.jwt.JwtProvider;
+
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

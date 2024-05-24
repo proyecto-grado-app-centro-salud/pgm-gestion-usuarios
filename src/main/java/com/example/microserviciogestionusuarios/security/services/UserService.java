@@ -14,6 +14,9 @@ import com.amazonaws.services.cognitoidp.model.AuthFlowType;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
 import com.amazonaws.services.cognitoidp.model.SignUpRequest;
+import com.example.microserviciogestionusuarios.security.dtos.AdministradorDto;
+import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
+import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignUpDto;
 import com.example.microserviciogestionusuarios.security.entities.User;
@@ -43,21 +46,31 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void signUpUser(SignUpDto signUpDto){
-        AttributeType attributeType = new AttributeType().withName("email").withValue(signUpDto.getEmail());
-        SignUpRequest signUpRequest = new SignUpRequest();
-        signUpRequest.withClientId(clientId)
-        .withPassword(signUpDto.getPassword())
-        .withUsername(signUpDto.getEmail())
-        .withUserAttributes(attributeType);
-        awsCognitoIdentityProvider.signUp(signUpRequest);
+    // public void signUpUser(SignUpDto signUpDto){
+    //     AttributeType attributeType = new AttributeType().withName("email").withValue(signUpDto.getEmail());
+    //     SignUpRequest signUpRequest = new SignUpRequest();
+    //     signUpRequest.withClientId(clientId)
+    //     .withPassword(signUpDto.getPassword())
+    //     .withUsername(signUpDto.getEmail())
+    //     .withUserAttributes(attributeType);
+    //     awsCognitoIdentityProvider.signUp(signUpRequest);
 
-        User user = new User();
-        user.setName(signUpDto.getName());
-        user.setLastname(signUpDto.getLastname());
-        user.setEmail(signUpDto.getEmail());
-        user.setRole(roleService.findByRoleName(RoleName.ROLE_ADMIN).get());
-        userRepository.save(user);
+    //     User user = new User();
+    //     user.setName(signUpDto.getName());
+    //     user.setLastname(signUpDto.getLastname());
+    //     user.setEmail(signUpDto.getEmail());
+    //     user.setRole(roleService.findByRoleName(RoleName.ROLE_ADMIN).get());
+    //     userRepository.save(user);
+    // }
+
+    public void signUpPaciente(PacienteDto pacienteDto){
+       
+    }
+    public void signUpMedico(MedicoDto medicoDto){
+       
+    }
+    public void signUpAdministrador(AdministradorDto administradorDto){
+      
     }
     public String signInUser(SignInDto signInDto){
         final Map<String,String> authParams=new HashMap<>();

@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.microserviciogestionusuarios.dtos.ResponseMessageDto;
+import com.example.microserviciogestionusuarios.security.dtos.AdministradorDto;
+import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
+import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignUpDto;
 import com.example.microserviciogestionusuarios.security.entities.User;
@@ -37,12 +40,36 @@ public class AuthController {
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
     
-    @PostMapping("/sign-up")    
-    public ResponseEntity<ResponseMessageDto> signUpUser(@RequestBody @Valid SignUpDto signUpDto,BindingResult bindingResult){
+    // @PostMapping("/sign-up")    
+    // public ResponseEntity<ResponseMessageDto> signUpUser(@RequestBody @Valid SignUpDto signUpDto,BindingResult bindingResult){
+    //     if(bindingResult.hasFieldErrors()){
+    //         return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+    //     }
+    //     userService.signUpUser(signUpDto);
+    //     return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
+    // }
+    @PostMapping("/registro-paciente")    
+    public ResponseEntity<ResponseMessageDto> signUpPaciente(@RequestBody @Valid PacienteDto pacienteDto,BindingResult bindingResult){
         if(bindingResult.hasFieldErrors()){
             return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
         }
-        userService.signUpUser(signUpDto);
+        userService.signUpPaciente(pacienteDto);
+        return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
+    }
+    @PostMapping("/registro-medico")    
+    public ResponseEntity<ResponseMessageDto> signUpMedico(@RequestBody @Valid MedicoDto medicoDto,BindingResult bindingResult){
+        if(bindingResult.hasFieldErrors()){
+            return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        }
+        userService.signUpMedico(medicoDto);
+        return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
+    }
+    @PostMapping("/registro-administrador")    
+    public ResponseEntity<ResponseMessageDto> signUpAdministrador(@RequestBody @Valid AdministradorDto administradorDto,BindingResult bindingResult){
+        if(bindingResult.hasFieldErrors()){
+            return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        }
+        userService.signUpAdministrador(administradorDto);
         return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
     }
     @PostMapping("/sign-in")

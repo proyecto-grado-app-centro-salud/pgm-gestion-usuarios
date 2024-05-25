@@ -17,14 +17,14 @@ import org.springframework.beans.factory.annotation.Value;
 @Component
 public class JwtProvider {
 
-    @Value(value = "${aws.cognito.identifyPoolUrl}")
-    private String identityPoolUrl;
+    // @Value(value = "${aws.cognito.identifyPoolUrl}")
+    private String identityPoolUrl="https://cognito-idp.us-east-1.amazonaws.com/us-east-1_5eNqZxf2x";
 
-    @Value(value = "${aws.cognito.region}")
-    private String region;
+    // @Value(value = "${aws.cognito.region}")
+    private String region="us-east-1";
 
-    @Value(value = "${aws.cognito.issuer}")
-    private String issuer;
+    // @Value(value = "${aws.cognito.issuer}")
+    private String issuer="https://cognito-idp.us-east-1.amazonaws.com/us-east-1_5eNqZxf2x";
 
     private static final String USERNAME = "username";
 

@@ -1,4 +1,5 @@
 package com.example.microserviciogestionusuarios.security.entities;
+import io.micrometer.common.lang.Nullable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,6 +34,7 @@ public class MedicoEntity {
     @Column(name = "email")
     private String email;
 
+    @Nullable
     @Column(name = "años_experiencia")
     private float añosExperiencia;
 

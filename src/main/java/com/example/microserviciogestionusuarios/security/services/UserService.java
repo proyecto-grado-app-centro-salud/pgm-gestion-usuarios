@@ -45,8 +45,8 @@ public class UserService {
     // @Autowired
     // private RoleService roleService;
 
-    @Value(value = "${aws.cognito.clientId}")
-    private String clientId;
+    // @Value(value = "${aws.cognito.clientId}")
+    private String clientId="4u16uooucre54ll4hcroq3g2jj";
 
     
 

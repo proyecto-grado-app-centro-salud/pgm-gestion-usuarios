@@ -1,5 +1,12 @@
+###Cuando se registra email1@gmail localmente se tiene que eliminar en cognito para
+###probarlo en registro nuevamente cuando se conecta al servicio definido porque
+###no existe en RDS
+
+###Problema en base de datos alguna tabla sin primary key u otra cosa
+
+###No confirmo el registro de cuenta
 ###
-POST http://localhost:8081/auth/registro-paciente
+POST http://consultas-medicas-lb-262836040.us-east-1.elb.amazonaws.com/api/microservicio-gestion-usuarios/auth/registro-paciente
 Content-Type: application/json
 
 {
@@ -18,7 +25,7 @@ Content-Type: application/json
   "escolaridad": "Universitario",
   "grupoSanguineo": "A+",
   "ci": "12345678",
-  "email": "victor.villazante@ucb.edu.bo",
+  "email": "vico060400@gmail.com",
   "celular": "5551234567",
   "diasSancion": 1,
   "edad": 34,
@@ -27,7 +34,7 @@ Content-Type: application/json
   "password": "Admin1234"
 }
 ###
-POST http://localhost:8081/auth/registro-medico
+POST http://consultas-medicas-lb-262836040.us-east-1.elb.amazonaws.com/api/microservicio-gestion-usuarios/auth/registro-medico
 Content-Type: application/json
 
 {
@@ -41,10 +48,10 @@ Content-Type: application/json
   "foto": "url_de_la_foto",
   "descripcion": "Médico especialista en cardiología.",
   "grupoSanguineo": "O+",
-  "password": "admin1234"
+  "password": "Admin1234"
 }
 ###
-POST http://localhost:8081/auth/registro-administrador
+POST http://consultas-medicas-lb-262836040.us-east-1.elb.amazonaws.com/api/microservicio-gestion-usuarios/auth/registro-administrador
 Content-Type: application/json
 
 {
@@ -53,25 +60,32 @@ Content-Type: application/json
   "telefono": "555-987-6543",
   "departamento": "Recursos Humanos",
   "cargo": "Gerente de Recursos Humanos",
-  "email": "vico060400@gmail.com",
+  "email": "vico060500@gmail.com",
   "grupoSanguineo": "AB-",
-  "password": "admin1234"
+  "password": "Admin1234"
 }
 
 
 
 ###
-POST http://localhost:8081/auth/sign-in
+POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/sign-in
 Content-Type: application/json
 
 {
-    "email":"victor.villazante@ucb.edu.bo",
+    "email":"vico060400@gmail.com",
     "password":"Admin1234"
 }
+
+###
+GET http://localhost:8086/api/microservicio-gestion-usuarios/auth/user-details
+Content-Type: application/json
+Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5NGU4YzQzOC01MGMxLTcwY2UtM2JlMC1iNmM5NWE1OWIzMmQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiI2OWNiNGZjNy01MzJjLTQyZGEtYWNkNS02ODA0MDE3MzgwNmYiLCJldmVudF9pZCI6ImM3OWE1NjU5LTAzMDYtNDEwMi05NDdjLThkMTI2ZTQwOTNkNiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTY2MzQ5MDAsImV4cCI6MTcxNjYzODUwMCwiaWF0IjoxNzE2NjM0OTAwLCJqdGkiOiJlZjQ5ZjU1NC0zYmVhLTQ0YTQtODM1YS1kOTk1NGVhYjM2ZjAiLCJ1c2VybmFtZSI6InZpY28wNjA0MDBAZ21haWwuY29tIn0.v4biOCjuHTQTSp3GGsQSDxhy5uwyXnazPgsFmYv72MpVcdq8ZAdw-9Bi0uVH68pP4tcC9bs7ifF5_-3-MJxwBfFptcE6lcSwkXx42AfxE9ojVoYPpFRtRzYzwrBOTvV6B94-OgJdOaKhcN25c-FYPW3Qm38G31dRAa-XxEGjHAzb4tLYucgxmDkoE8tRy5LuVehKw-R5SMuyKeUBu83gR-LDETtOiIKZ9fS1EXyG9wl1BgPcPDhzgD3dEPF2fTl_f68LIwru6ml9ScNhRsPBH94LdH8vhh2XMG6iLwKi7biGqzDeMhFpihr0W6hzJGRRE4wEbAmCW1p1IwdqGuoJpg
+
+GET http://localhost:8086/api/microservicio-gestion-usuarios/manage/health
 ###
 GET http://localhost:8081/message/paciente-message
 Content-Type: application/json
-Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJlNDk4YjRjOC04MGMxLTcwNmMtM2VjNy0zOTA0NDRjOTZiNzEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiI2ZDQ0YzFjZi0yYzE1LTQxMzUtOTFkZi04M2UzMzQ5NjE1ZmUiLCJldmVudF9pZCI6ImZmNGMxOWM5LTUzZmEtNDNhOS04YjNmLTYyODNmYWFkNjVhMSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTY1MzgzNDQsImV4cCI6MTcxNjU0MTk0NCwiaWF0IjoxNzE2NTM4MzQ0LCJqdGkiOiI4MGJjMmFlNS05OGIyLTRkOGMtYTdiNS0yZmNkMDE3M2U3NDQiLCJ1c2VybmFtZSI6InZpY3Rvci52aWxsYXphbnRlQHVjYi5lZHUuYm8ifQ.ejVNbV8sXsLJ8AXfWzNPx99_JcxnxsCfDq8CAPvxD7TfK1bmHz7RBJaTvvKoznL99j13qITKkv0z2kxpTP-pBIy5Y7kFk_9QTGeX344AP6R0VOF99pX3wPtbC_BQ3E9wwH0tXqGNGax6XarfRpMvWlWTKU5SZKwe7XA04kaXq5KSqwIqQhynBXsBIctZk4Hbd-9b_7mw4rfJdm6zQ7m5_pD5D9bkgpEkxq5dzn3mu1POjenYbFRtSqiTWkhJz3YQwdsGxG9DEZMpYwGlzKT5ZecJvswwhvxITi9maW-L7wHKH-BwVCMLipNxrJt3YrciUvSPg4CG15lV95v_JhXvRg
+Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5NGU4YzQzOC01MGMxLTcwY2UtM2JlMC1iNmM5NWE1OWIzMmQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiJiY2MzNTA0Yy1jZTU0LTQyZjQtOWNlOC0xZGI1YjM4NGU5M2YiLCJldmVudF9pZCI6ImY5ZDNkOTY1LWIwMjQtNDRjNS05YTVjLWRjYjQ1NjlhZjQ1YyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTY1NjE1OTcsImV4cCI6MTcxNjU2NTE5NywiaWF0IjoxNzE2NTYxNTk3LCJqdGkiOiI2YTk5YzVlYi05MGQ2LTQxY2YtOGRkNS1jMTdiYjkwMTcxNGYiLCJ1c2VybmFtZSI6InZpY28wNjA0MDBAZ21haWwuY29tIn0.CG2_13fj1S0iRjOJUBfT5KQRaDRn9NT0G3ijxxZW3oIanBsJDFZ5wb54A_nbcLAh_zXW-gYR-OV8n-b38DMXu26PZu5u7ulWIJNGgLns543MwouHehAFlFAjc7DGNjj6kjq5UElxKdN0ebIvmmLQVkqNvJNBXsmrc8yCl4_8zc4S5DiWMnQmTu29STOle_4OOiMuiL9M9tOr4Qcfwgte7KVy_OKEl_o09hsP1gi6LwC1cN36pl8QBOX0Y7L7P7mlMLZljAKJQwpw0oeySgHEv8Y0mD2-W6fG8ExdRyb0brZbs5QLs-WOoSk1o_HBnRyQ14wkjGuAtlL3R8BNjzYg7w
 
 ###
 GET http://localhost:8081/message/medico-message
@@ -85,12 +99,9 @@ Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeG
 
 ###Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIzNDA4YjQwOC04MGIxLTcwY2ItZDRlNS0xMWRiZGMyZWQ0MGYiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiI1ZDk4NjMzNS0xNWZhLTQ5ZjQtOTNlOS1lOWJlNWRiNDIyZDEiLCJldmVudF9pZCI6IjY5ZWFmOTQ2LWJiMzQtNDY3ZS1hY2U5LWNmZmY4Njg2YjNlMyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTY0NDA3OTUsImV4cCI6MTcxNjQ0NDM5NSwiaWF0IjoxNzE2NDQwNzk1LCJqdGkiOiJjZDU3MTY3My0zZTE4LTQ5NzgtYTY5NS02N2I4NDk1MmFlN2EiLCJ1c2VybmFtZSI6InZpbGxhemFudGUuYmVybmFiZS52aWN0b3JAZ21haWwuY29tIn0.dRAXKEffnciW50g4C18C_c5j_n0fSIHcU1YY5m2u0UFzK4YjbARbilROY9Ey2iSWJbumLyxII0rRNGlUoa87i2KV2jzNCZN_iFU4EpfEa6wYk_Xy5APLTmYUWzgedvqIck2hDeD0JEJr_x6x9GSEFwYB4OCAJiyZeXXYhn7ezRECy6mBxXzo0GVRXV3bp8n0v69w0K1K-4pdJ7sD2wkLXot2ifAaSHvbrb8VC44_gbNPfQsk65TNFBOGJwRsfcQOrrXgUSbPbLIEF_Bdwme4n-RbXgrX6KUQB1U1KxtgwYoohahIEVRswGVbrRofIV-AzDYurzdX-j8EOcwZzZNhsQ
 
-GET http://localhost:8086/api/microservicio-gestion-usuarios/auth/user-details
-Content-Type: application/json
-Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJlNDk4YjRjOC04MGMxLTcwNmMtM2VjNy0zOTA0NDRjOTZiNzEiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiI2ZDQ0YzFjZi0yYzE1LTQxMzUtOTFkZi04M2UzMzQ5NjE1ZmUiLCJldmVudF9pZCI6ImZmNGMxOWM5LTUzZmEtNDNhOS04YjNmLTYyODNmYWFkNjVhMSIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTY1MzgzNDQsImV4cCI6MTcxNjU0MTk0NCwiaWF0IjoxNzE2NTM4MzQ0LCJqdGkiOiI4MGJjMmFlNS05OGIyLTRkOGMtYTdiNS0yZmNkMDE3M2U3NDQiLCJ1c2VybmFtZSI6InZpY3Rvci52aWxsYXphbnRlQHVjYi5lZHUuYm8ifQ.ejVNbV8sXsLJ8AXfWzNPx99_JcxnxsCfDq8CAPvxD7TfK1bmHz7RBJaTvvKoznL99j13qITKkv0z2kxpTP-pBIy5Y7kFk_9QTGeX344AP6R0VOF99pX3wPtbC_BQ3E9wwH0tXqGNGax6XarfRpMvWlWTKU5SZKwe7XA04kaXq5KSqwIqQhynBXsBIctZk4Hbd-9b_7mw4rfJdm6zQ7m5_pD5D9bkgpEkxq5dzn3mu1POjenYbFRtSqiTWkhJz3YQwdsGxG9DEZMpYwGlzKT5ZecJvswwhvxITi9maW-L7wHKH-BwVCMLipNxrJt3YrciUvSPg4CG15lV95v_JhXvRg
 
 #consultas-medicas-lb
 #consultas-medicas-sg
 #consultas-medicas-tg
 ###
-GET http://localhost:8086/api/microservicio-gestion-usuarios/manage/health
+

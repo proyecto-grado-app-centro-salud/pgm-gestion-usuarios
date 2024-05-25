@@ -1,5 +1,7 @@
 package com.example.microserviciogestionusuarios.security;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,12 +14,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 
 import com.example.microserviciogestionusuarios.security.jwt.JwtEntryPoint;
-// import com.example.microserviciogestionusuarios.security.jwt.JwtTokenFilter;
 import com.example.microserviciogestionusuarios.security.jwt.JwtTokenFilter;
 
 import java.util.Arrays;
 import java.util.List;
-
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -27,7 +27,7 @@ public class MainSecurity {
     public JwtEntryPoint jwtEntryPoint;
 
     @Bean
-    public JwtTokenFilter jwtTokenFilter() {
+    JwtTokenFilter jwtTokenFilter() {
         return new JwtTokenFilter();
     }
 
@@ -35,24 +35,23 @@ public class MainSecurity {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().configurationSource( request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.setAllowedOrigins(Arrays.asList("*"));
-            corsConfiguration.setAllowedMethods(List.of("HEAD","GET","POST","PUT","DELETE"));
+            corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+            corsConfiguration.setAllowedOriginPatterns(List.of("*"));
+            corsConfiguration.setAllowedMethods(List.of("HEAD","GET","POST","PUT","DELETE","PATCH","OPTIONS"));
             corsConfiguration.setAllowCredentials(true);
             corsConfiguration.addExposedHeader("Message");
-            corsConfiguration.setAllowedHeaders(List.of("Authorization","Cache-control", "Content-Type"));
+            corsConfiguration.setAllowedHeaders(List.of("*"));
             return corsConfiguration;
         }).and().csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/auth/registro-paciente",
-                "/auth/registro-medico",
-                "/auth/registro-administrador",
-                        "/auth/sign-in","/manage/*")
+                .requestMatchers("/auth/*","/manage/*","/api/*","/auth/sign-in")
+                //.requestMatchers("*")
                 .permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(jwtEntryPoint)
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+        //http.addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

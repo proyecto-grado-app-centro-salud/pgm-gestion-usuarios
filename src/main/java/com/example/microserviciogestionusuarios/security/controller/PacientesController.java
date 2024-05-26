@@ -50,7 +50,7 @@ public class PacientesController {
     @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<String> registroPaciente(PacienteDto pacienteDto) {
-        pacienteService.registroPaciente();
+        pacienteService.registroPaciente(pacienteDto);
         return new ResponseEntity<String>("OK", HttpStatus.OK);
     }
 

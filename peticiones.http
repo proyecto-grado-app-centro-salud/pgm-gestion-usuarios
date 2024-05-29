@@ -42,7 +42,7 @@ Content-Type: application/json
   "ci": "1234567",
   "direccion": "Av. Principal #123",
   "celular": "555-123-4567",
-  "email": "villazante.bernabe.victor@gmail.com",
+  "email": "victor.villazante@ucb.edu.bo",
   "añosExperiencia": 10.5,
   "salario": 75000.0,
   "foto": "url_de_la_foto",
@@ -60,7 +60,7 @@ Content-Type: application/json
   "telefono": "555-987-6543",
   "departamento": "Recursos Humanos",
   "cargo": "Gerente de Recursos Humanos",
-  "email": "vico060500@gmail.com",
+  "email": "usuario1@gmail.com",
   "grupoSanguineo": "AB-",
   "password": "Admin1234"
 }
@@ -110,3 +110,77 @@ Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeG
 #consultas-medicas-tg
 ###
 
+# -----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+###
+GET http://localhost:8086/api/microservicio-gestion-usuarios/manage/health
+
+
+###
+GET http://localhost:8086/api/microservicio-gestion-usuarios/pacientes/1
+
+###
+GET http://localhost:8086/api/microservicio-gestion-usuarios/pacientes
+
+
+###
+GET http://localhost:8086/api/microservicio-gestion-usuarios/pacientes/1
+
+###
+GET http://localhost:8086/api/microservicio-gestion-usuarios/pacientes/info-container
+
+###
+POST http://localhost:8086/api/microservicio-gestion-usuarios/pacientes
+Content-Type: application/json
+
+{
+  "apellidoPaterno": "Gómez nuevo",
+  "apellidoMaterno": "López",
+  "nombres": "Juan",
+  "fechaNacimiento": "1990-05-15",
+  "sexo": "Masculino",
+  "procedencia": "Ciudad de México",
+  "fechaIngreso": "2024-05-25",
+  "idiomaHablado": "Español",
+  "autoprescedenciaCultural": "Mexicano",
+  "ocupacion": "Ingeniero",
+  "apoyoDesicionAsistenciaMedica": "Familia",
+  "estadoCivil": "Soltero",
+  "escolaridad": "Universitario",
+  "grupoSanguineo": "A+",
+  "ci": "12345678",
+  "email": "vico060400@gmail.com",
+  "celular": "5551234567",
+  "diasSancion": 1,
+  "edad": 34,
+  "residencia": "Calle Principal #123",
+  "codigoExpedienteClinico": "ABCD1234",
+  "password": "Admin1234"
+}
+###
+PUT http://localhost:8086/api/microservicio-gestion-usuarios/pacientes/1
+Content-Type: application/json
+
+{
+  "apellidoPaterno": "Ruiz",
+  "apellidoMaterno": "Gómez",
+  "nombres": "Juan Manuel",
+  "fechaNacimiento": "1978-11-02",
+  "sexo": "Masculino",
+  "procedencia": "Monterrey",
+  "fechaIngreso": "2023-02-20",
+  "idiomaHablado": "Español",
+  "autoprescedenciaCultural": "Mestizo",
+  "ocupacion": "Abogado",
+  "apoyoDecisionAsistenciaMedica": "Padre",
+  "estadoCivil": "Divorciado",
+  "escolaridad": "Universitaria",
+  "grupoSanguineo": "B-",
+  "ci": "7654321",
+  "email": "juan.ruiz@example.com",
+  "celular": "+5218187654321",
+  "diasSancion": 0,
+  "edad": 45,
+  "residencia": "Monterrey",
+  "codigoExpedienteClinico": "CEX345678"
+}

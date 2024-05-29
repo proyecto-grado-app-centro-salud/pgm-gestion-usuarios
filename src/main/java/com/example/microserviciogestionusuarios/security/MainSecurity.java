@@ -44,7 +44,7 @@ public class MainSecurity {
             return corsConfiguration;
         }).and().csrf().disable()
                 .authorizeRequests()
-                .requestMatchers("/auth/*","/manage/*","/api/*","/auth/sign-in","/pacientes/*","/pacientes")
+                .requestMatchers("/auth/*","/manage/*","/api/*","/auth/sign-in","/pacientes/*","/pacientes","/medicos/*","/medicos")
                 //.requestMatchers("*")
                 .permitAll()
                 .anyRequest().authenticated()

@@ -35,10 +35,10 @@ public class MainSecurity {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.cors().configurationSource( request -> {
             CorsConfiguration corsConfiguration = new CorsConfiguration();
-            corsConfiguration.setAllowedOrigins(Arrays.asList("http://localhost:4200"));
+            corsConfiguration.setAllowedOrigins(List.of("*"));
             corsConfiguration.setAllowedOriginPatterns(List.of("*"));
             corsConfiguration.setAllowedMethods(List.of("HEAD","GET","POST","PUT","DELETE","PATCH","OPTIONS"));
-            corsConfiguration.setAllowCredentials(true);
+            corsConfiguration.setAllowCredentials(false);
             corsConfiguration.addExposedHeader("Message");
             corsConfiguration.setAllowedHeaders(List.of("*"));
             return corsConfiguration;

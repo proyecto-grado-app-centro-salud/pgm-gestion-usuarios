@@ -20,7 +20,13 @@ public class MedicoEntity {
     private int idMedico;
 
     @Column(name = "nombre")
-    private String nombre;
+    private String nombres;
+
+    @Column(name = "apellido_paterno")
+    private String apellidoPaterno;
+
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
 
     @Column(name = "ci")
     private String ci;
@@ -34,12 +40,11 @@ public class MedicoEntity {
     @Column(name = "email")
     private String email;
 
-    @Nullable
     @Column(name = "años_experiencia")
-    private float añosExperiencia;
+    private Integer añosExperiencia;
 
     @Column(name = "salario")
-    private float salario;
+    private Float salario;
 
     @Column(name = "foto")
     private String foto;

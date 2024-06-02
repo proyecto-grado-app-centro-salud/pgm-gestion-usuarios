@@ -8,7 +8,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class MedicoDto {
 
-    private String nombre;
+    private String nombres;
 
     private String ci;
 
@@ -18,9 +18,9 @@ public class MedicoDto {
 
     private String email;
 
-    private float añosExperiencia;
+    private Integer añosExperiencia;
 
-    private float salario;
+    private Float salario;
 
     private String foto;
 

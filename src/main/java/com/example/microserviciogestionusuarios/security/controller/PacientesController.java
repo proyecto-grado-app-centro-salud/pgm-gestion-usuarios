@@ -19,6 +19,7 @@ import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
 import com.example.microserviciogestionusuarios.security.repositories.PacienteRepository;
 import com.example.microserviciogestionusuarios.security.services.PacienteService;
+import com.example.microserviciogestionusuarios.security.util.ApiResponse;
 
 import jakarta.annotation.security.PermitAll;
 
@@ -64,22 +65,21 @@ public class PacientesController {
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PermitAll
     @PostMapping
-    public ResponseEntity<String> registroPaciente(@RequestBody PacienteDto pacienteDto) {
+    public ResponseEntity<ApiResponse> registroPaciente(@RequestBody PacienteDto pacienteDto) {
         pacienteService.registroPaciente(pacienteDto);
-        return new ResponseEntity<String>("OK", HttpStatus.OK);
+        return new ResponseEntity<ApiResponse>(new ApiResponse("","OK"), HttpStatus.OK);
     }
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PermitAll
-    @DeleteMapping()
-    public @ResponseBody String eliminarPaciente(@PathVariable int idPaciente) {
+    @DeleteMapping("/{idPaciente}")
+    public @ResponseBody ApiResponse eliminarPaciente(@PathVariable int idPaciente) {
         pacienteRepository.deleteById(idPaciente);
-        return "OK";
-
+        return new ApiResponse("200","Ok");
     }
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PermitAll
     @PutMapping("/{id}")
-    public @ResponseBody String actualizarReceta(@PathVariable Integer id, @RequestBody PacienteEntity actualizada) {
+    public @ResponseBody PacienteEntity actualizarReceta(@PathVariable Integer id, @RequestBody PacienteEntity actualizada) {
         return pacienteRepository.findById(id)
                 .map(paciente -> {
                     paciente.setApellidoPaterno(actualizada.getApellidoPaterno());
@@ -104,10 +104,10 @@ public class PacientesController {
                     paciente.setResidencia(actualizada.getResidencia());
                     paciente.setCodigoExpedienteClinico(actualizada.getCodigoExpedienteClinico());
                     pacienteRepository.save(paciente);
-                    return "Historia clínica actualizada con éxito";
+                    return paciente;
                 })
                 .orElseGet(() -> {
-                    return "Error en la actualizacion";
+                    return new PacienteEntity();
                 });
     }
 }

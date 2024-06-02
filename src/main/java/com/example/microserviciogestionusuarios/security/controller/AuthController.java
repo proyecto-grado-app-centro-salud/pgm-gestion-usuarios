@@ -57,23 +57,35 @@ public class AuthController {
         // if(bindingResult.hasFieldErrors()){
         //     return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
         // }
-        userService.signUpPaciente(pacienteDto);
+        try{
+            userService.signUpPaciente(pacienteDto);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto("Error al registrar paciente"));
+        }
         return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
     }
     @PostMapping("/registro-medico")    
     public ResponseEntity<ResponseMessageDto> signUpMedico(@RequestBody @Valid MedicoDto medicoDto,BindingResult bindingResult){
-        if(bindingResult.hasFieldErrors()){
-            return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        // if(bindingResult.hasFieldErrors()){
+        //     return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        // }
+        try{
+            userService.signUpMedico(medicoDto);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto("Error al registrar medico"));
         }
-        userService.signUpMedico(medicoDto);
         return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
     }
     @PostMapping("/registro-administrador")    
     public ResponseEntity<ResponseMessageDto> signUpAdministrador(@RequestBody @Valid AdministradorDto administradorDto,BindingResult bindingResult){
-        if(bindingResult.hasFieldErrors()){
-            return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        // if(bindingResult.hasFieldErrors()){
+        //     return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()),HttpStatus.BAD_REQUEST);
+        // }
+        try{
+            userService.signUpAdministrador(administradorDto);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessageDto("Error al registrar administrador"));
         }
-        userService.signUpAdministrador(administradorDto);
         return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto("Se ha registrado el usuario con exito"), HttpStatus.OK);
     }
     @PostMapping("/sign-in")

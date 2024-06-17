@@ -10,6 +10,10 @@ public class MedicoDto {
 
     private String nombres;
 
+    private String apellidoPaterno;
+
+    private String apellidoMaterno;
+
     private String ci;
 
     private String direccion;

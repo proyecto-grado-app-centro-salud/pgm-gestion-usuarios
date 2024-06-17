@@ -20,6 +20,7 @@ import com.example.microserviciogestionusuarios.security.dtos.AdministradorDto;
 import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
+import com.example.microserviciogestionusuarios.security.dtos.UserDetailsDto;
 import com.example.microserviciogestionusuarios.security.entities.AdministradorEntity;
 import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
 import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
@@ -109,22 +110,33 @@ public class AuthController {
     // }
     
     @GetMapping("/user-details")
-    public List<String> getUserDetails(){
+    public UserDetailsDto getUserDetails(){
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String email = userDetails.getUsername();
         List<String> roles = new ArrayList<>();
-        if (userService.findByEmailPaciente(email).isPresent()) {
+        UserDetailsDto userDetailsDto=new UserDetailsDto(roles, 0, 0, 0, email, "");
+        Optional<PacienteEntity> pacienteOptional=userService.findByEmailPaciente(email);
+        Optional<MedicoEntity> medicoOptional=userService.findByEmailMedico(email);
+        Optional<AdministradorEntity> administradorOptional=userService.findByEmailAdministrador(email);
+        if (pacienteOptional.isPresent()) {
+            userDetailsDto.setCi(pacienteOptional.get().getCi());
+            userDetailsDto.setIdPaciente(pacienteOptional.get().getIdPaciente());
             roles.add("PACIENTE");
         }
         
-        if (userService.findByEmailMedico(email).isPresent()) {
+        if (medicoOptional.isPresent()) {
+            userDetailsDto.setCi(medicoOptional.get().getCi());
+            userDetailsDto.setIdMedico(medicoOptional.get().getIdMedico());
             roles.add("MEDICO");
         }
         
-        if (userService.findByEmailAdministrador(email).isPresent()) {
+        if (administradorOptional.isPresent()) {
+            userDetailsDto.setCi(administradorOptional.get().getCi());
+            userDetailsDto.setIdAdministrador(administradorOptional.get().getIdAdministrador());
             roles.add("ADMINISTRADOR");
         }
-        return roles;
+        userDetailsDto.setRoles(roles);
+        return userDetailsDto;
     }
     @GetMapping("/detalles-paciente")
     public Optional<PacienteEntity> getPacienteDetail(){

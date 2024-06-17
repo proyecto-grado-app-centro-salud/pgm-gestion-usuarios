@@ -19,7 +19,7 @@ public class MedicoEntity {
     @Column(name = "id_medico")
     private int idMedico;
 
-    @Column(name = "nombre")
+    @Column(name = "nombres")
     private String nombres;
 
     @Column(name = "apellido_paterno")

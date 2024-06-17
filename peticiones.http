@@ -10,68 +10,55 @@
 POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/registro-paciente
 Content-Type: application/json
 
-{
-  "apellidoPaterno": "Gómez",
-  "apellidoMaterno": "López",
-  "nombres": "Juan",
-  "fechaNacimiento": "1990-05-15",
-  "sexo": "Masculino",
-  "procedencia": "Ciudad de México",
-  "fechaIngreso": "2024-05-25",
-  "idiomaHablado": "Español",
-  "autoprescedenciaCultural": "Mexicano",
-  "ocupacion": "Ingeniero",
-  "apoyoDesicionAsistenciaMedica": "Familia",
-  "estadoCivil": "Soltero",
-  "escolaridad": "Universitario",
-  "grupoSanguineo": "A+",
-  "ci": "12345678",
-  "email": "emailNuevito117@gmail.com",
-  "celular": "5551234567",
-  "diasSancion": 1,
-  "edad": 34,
-  "residencia": "Calle Principal #123",
-  "codigoExpedienteClinico": "ABCD1234",
-  "password": "Admin1234"
-}
+  {
+        "idPaciente": 2,
+        "apellidoPaterno": "Sánchez",
+        "apellidoMaterno": "González",
+        "nombres": "Carlos",
+        "fechaNacimiento": "1978-09-15",
+        "sexo": "M",
+        "procedencia": "Ciudad Real",
+        "fechaIngreso": "2020-02-12",
+        "idiomaHablado": "Español",
+        "autoprescedenciaCultural": "Hispano",
+        "ocupacion": "Abogado",
+        "apoyoDesicionAsistenciaMedica": "Familia",
+        "estadoCivil": "Casado",
+        "escolaridad": "Maestría",
+        "grupoSanguineo": "AB+",
+        "ci": "98392847",
+        "email": "carlossanchez98392847@gmail.com",
+        "celular": "555-4321",
+        "diasSancion": 0,
+        "edad": 46,
+        "residencia": "Ciudad Real",
+        "codigoExpedienteClinico": "CR1003",
+	  "password": "98392847Carlossanchez"
+    }
+
 ###
 POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/registro-medico
 Content-Type: application/json
 
 {
-  "nombres": "Dr. Juan Pérez",
-  "ci": "1234567",
-  "direccion": "Av. Principal #123",
-  "celular": "555-123-4567",
-  "email": "emailNuevito6@gmail.com",
-  "añosExperiencia": 10.5,
-  "salario": 75000.0,
-  "foto": "url_de_la_foto",
-  "descripcion": "Médico especialista en cardiología.",
-  "grupoSanguineo": "O+",
-  "password": "Admin1234"
-}
-###
-POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/registro-medico
-Content-Type: application/json
-
-{
-  "añosExperiencia": 1,
-  "celular": "",
-  "ci": "",
-  "descripcion": "",
-  "direccion": "",
-  "email": "usuarioNuevito7@gmail.com",
-  "foto": "",
-  "grupoSanguineo": "",
-  "nombres": "",
-  "password": "email3",
-  "salario": 100
+    "nombres": "Juan Carlos",
+    "ci": "12345678",
+    "direccion": "Calle Falsa 123, Ciudad Ejemplo",
+    "celular": "555-1234",
+    "email": "usuario7@gmail.com",
+    "añosExperiencia": 15,
+    "salario": 80000,
+    "foto": "juan_carlos.jpg",
+    "descripcion": "Especialista en cardiología con amplia experiencia en manejo de hipertensión.",
+    "grupoSanguineo": "O+",
+    "apellidoPaterno": "Fernandez",
+    "apellidoMaterno": "Loza",
+    "password": "Juancarlos12345678"
 }
 
-###
-#POST http://consultas-medicas-lb-262836040.us-east-1.elb.amazonaws.com/api/microservicio-gestion-usuarios/auth/registro-administrador
-POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/registro-administrador
+###POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/registro-administrador
+
+POST http://consultas-medicas-lb-262836040.us-east-1.elb.amazonaws.com/api/microservicio-gestion-usuarios/auth/registro-administrador
 Content-Type: application/json
 
 {
@@ -80,7 +67,7 @@ Content-Type: application/json
   "telefono": "555-987-6543",
   "departamento": "Recursos Humanos",
   "cargo": "Gerente de Recursos Humanos",
-  "email": "emailNuevito4@gmail.com",
+  "email": "vico060400@gmail.com",
   "grupoSanguineo": "AB-",
   "password": "Admin1234"
 }
@@ -88,18 +75,18 @@ Content-Type: application/json
 
 
 ###
-POST http://localhost:8084/api/microservicio-gestion-usuarios/auth/sign-in
+POST http://localhost:8086/api/microservicio-gestion-usuarios/auth/sign-in
 Content-Type: application/json
 
 {
-    "email":"vico060400@gmail.com",
-    "password":"Admin1234"
+    "email":"carlossanchez98392847@gmail.com",
+    "password":"98392847Carlossanchez"
 }
 
 ###
 GET http://localhost:8086/api/microservicio-gestion-usuarios/auth/user-details
 Content-Type: application/json
-Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiI5NGU4YzQzOC01MGMxLTcwY2UtM2JlMC1iNmM5NWE1OWIzMmQiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiI2OWNiNGZjNy01MzJjLTQyZGEtYWNkNS02ODA0MDE3MzgwNmYiLCJldmVudF9pZCI6ImM3OWE1NjU5LTAzMDYtNDEwMi05NDdjLThkMTI2ZTQwOTNkNiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTY2MzQ5MDAsImV4cCI6MTcxNjYzODUwMCwiaWF0IjoxNzE2NjM0OTAwLCJqdGkiOiJlZjQ5ZjU1NC0zYmVhLTQ0YTQtODM1YS1kOTk1NGVhYjM2ZjAiLCJ1c2VybmFtZSI6InZpY28wNjA0MDBAZ21haWwuY29tIn0.v4biOCjuHTQTSp3GGsQSDxhy5uwyXnazPgsFmYv72MpVcdq8ZAdw-9Bi0uVH68pP4tcC9bs7ifF5_-3-MJxwBfFptcE6lcSwkXx42AfxE9ojVoYPpFRtRzYzwrBOTvV6B94-OgJdOaKhcN25c-FYPW3Qm38G31dRAa-XxEGjHAzb4tLYucgxmDkoE8tRy5LuVehKw-R5SMuyKeUBu83gR-LDETtOiIKZ9fS1EXyG9wl1BgPcPDhzgD3dEPF2fTl_f68LIwru6ml9ScNhRsPBH94LdH8vhh2XMG6iLwKi7biGqzDeMhFpihr0W6hzJGRRE4wEbAmCW1p1IwdqGuoJpg
+Authorization: Bearer eyJraWQiOiJ1aHV0bGR1dGtvNVgxVzcyY1BIZHRHVDkwSWxmWkFWc29JeGxnd0pCK3IwPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiJhNDE4ZDRhOC0xMDYxLTcwY2UtMzcyYy0zZTA0N2QzZDQxYjAiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAudXMtZWFzdC0xLmFtYXpvbmF3cy5jb21cL3VzLWVhc3QtMV81ZU5xWnhmMngiLCJjbGllbnRfaWQiOiI0dTE2dW9vdWNyZTU0bGw0aGNyb3EzZzJqaiIsIm9yaWdpbl9qdGkiOiI4ZGFjMTEyYi05M2ZhLTQyMzYtODBlYy1iY2YwM2NmZjlhNTEiLCJldmVudF9pZCI6IjVjODhkMWM3LWExNmUtNGZiNC05MjM0LTE3MTBiMjhjZjhjYyIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE3MTgxNjM2MDYsImV4cCI6MTcxODE2NzIwNiwiaWF0IjoxNzE4MTYzNjA2LCJqdGkiOiJlOGQyYzUwNy0wYjVmLTRiMGEtOThhYy1lNWY0ZDhhZDFhN2EiLCJ1c2VybmFtZSI6Im1hcmlhZmVybmFuZGE4MjkxNzQ4M0BnbWFpbC5jb20ifQ.xO0ulZTPA_OXVCmdvXz9pIgIJkr2jO6OahL_pvUlyb2py9Tt3pshJ2I3O36NfnXEiadWsC8mp7tps-lIhF2r0qqxBSnTrBErrn81l10wDg7kJC6DM-xIn6RPngFCyo6aZCt3ppYk4dum8IMAbwURaPqryM3pv0qimb9KBR4xRHMNC4KLCGR9RJ4zi0mkMfJmA17iFS2zJwbQHvPiePpvY4CmcWnDU4ftnPp6PrFRKEhrstVnaK9Yj09CcLP-KOQJQrdruyQlQQMOglYZwg-eV4EjeyQocPdah91Alr8gyHDbePqBUemgtIH8sFmEA3MGKx-YO3arVH186jTK50SKqg
 
 GET http://localhost:8086/api/microservicio-gestion-usuarios/manage/health
 ###

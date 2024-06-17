@@ -80,33 +80,33 @@ public class UserService {
         Optional<PacienteEntity> pacienteEntityOptional = findByEmailPaciente(pacienteDto.getEmail());
         Optional<MedicoEntity> medicoEntityOptional = findByEmailMedico(pacienteDto.getEmail());
         Optional<AdministradorEntity> administradorEntity = findByEmailAdministrador(pacienteDto.getEmail());
-        // if (pacienteEntityOptional.isPresent()) {
-        //     throw new Exception();
-        // } else {
-        //     PacienteEntity pacienteEntity = new PacienteEntity();
-        //     pacienteEntity.setApellidoPaterno(pacienteDto.getApellidoPaterno());
-        //     pacienteEntity.setApellidoMaterno(pacienteDto.getApellidoMaterno());
-        //     pacienteEntity.setNombres(pacienteDto.getNombres());
-        //     pacienteEntity.setFechaNacimiento(pacienteDto.getFechaNacimiento());
-        //     pacienteEntity.setSexo(pacienteDto.getSexo());
-        //     pacienteEntity.setProcedencia(pacienteDto.getProcedencia());
-        //     pacienteEntity.setFechaIngreso(pacienteDto.getFechaIngreso());
-        //     pacienteEntity.setIdiomaHablado(pacienteDto.getIdiomaHablado());
-        //     pacienteEntity.setAutoprescedenciaCultural(pacienteDto.getAutoprescedenciaCultural());
-        //     pacienteEntity.setOcupacion(pacienteDto.getOcupacion());
-        //     pacienteEntity.setApoyoDesicionAsistenciaMedica(pacienteDto.getApoyoDesicionAsistenciaMedica());
-        //     pacienteEntity.setEstadoCivil(pacienteDto.getEstadoCivil());
-        //     pacienteEntity.setEscolaridad(pacienteDto.getEscolaridad());
-        //     pacienteEntity.setGrupoSanguineo(pacienteDto.getGrupoSanguineo());
-        //     pacienteEntity.setCi(pacienteDto.getCi());
-        //     pacienteEntity.setEmail(pacienteDto.getEmail());
-        //     pacienteEntity.setCelular(pacienteDto.getCelular());
-        //     pacienteEntity.setDiasSancion(pacienteDto.getDiasSancion());
-        //     pacienteEntity.setEdad(pacienteDto.getEdad());
-        //     pacienteEntity.setResidencia(pacienteDto.getResidencia());
-        //     pacienteEntity.setCodigoExpedienteClinico(pacienteDto.getCodigoExpedienteClinico());
-        //     pacienteRepository.save(pacienteEntity);
-        // }
+        if (pacienteEntityOptional.isPresent()) {
+            throw new Exception();
+        } else {
+            PacienteEntity pacienteEntity = new PacienteEntity();
+            pacienteEntity.setApellidoPaterno(pacienteDto.getApellidoPaterno());
+            pacienteEntity.setApellidoMaterno(pacienteDto.getApellidoMaterno());
+            pacienteEntity.setNombres(pacienteDto.getNombres());
+            pacienteEntity.setFechaNacimiento(pacienteDto.getFechaNacimiento());
+            pacienteEntity.setSexo(pacienteDto.getSexo());
+            pacienteEntity.setProcedencia(pacienteDto.getProcedencia());
+            pacienteEntity.setFechaIngreso(pacienteDto.getFechaIngreso());
+            pacienteEntity.setIdiomaHablado(pacienteDto.getIdiomaHablado());
+            pacienteEntity.setAutoprescedenciaCultural(pacienteDto.getAutoprescedenciaCultural());
+            pacienteEntity.setOcupacion(pacienteDto.getOcupacion());
+            pacienteEntity.setApoyoDesicionAsistenciaMedica(pacienteDto.getApoyoDesicionAsistenciaMedica());
+            pacienteEntity.setEstadoCivil(pacienteDto.getEstadoCivil());
+            pacienteEntity.setEscolaridad(pacienteDto.getEscolaridad());
+            pacienteEntity.setGrupoSanguineo(pacienteDto.getGrupoSanguineo());
+            pacienteEntity.setCi(pacienteDto.getCi());
+            pacienteEntity.setEmail(pacienteDto.getEmail());
+            pacienteEntity.setCelular(pacienteDto.getCelular());
+            pacienteEntity.setDiasSancion(pacienteDto.getDiasSancion());
+            pacienteEntity.setEdad(pacienteDto.getEdad());
+            pacienteEntity.setResidencia(pacienteDto.getResidencia());
+            pacienteEntity.setCodigoExpedienteClinico(pacienteDto.getCodigoExpedienteClinico());
+            pacienteRepository.save(pacienteEntity);
+        }
 
         if (!pacienteEntityOptional.isPresent() && !medicoEntityOptional.isPresent()
                 && !administradorEntity.isPresent()) {
@@ -132,6 +132,8 @@ public class UserService {
             medicoEntity.setFoto(medicoDto.getFoto());
             medicoEntity.setDescripcion(medicoDto.getDescripcion());
             medicoEntity.setGrupoSanguineo(medicoDto.getGrupoSanguineo());
+            medicoEntity.setApellidoMaterno(medicoDto.getApellidoMaterno());
+            medicoEntity.setApellidoPaterno(medicoDto.getApellidoPaterno());
             medicoRepository.save(medicoEntity);
 
         }
@@ -162,7 +164,6 @@ public class UserService {
         }
         if (!pacienteEntityOptional.isPresent() && !medicoEntityOptional.isPresent()
                 && !administradorEntityOptional.isPresent()) {
-            //throw new Exception();
             registrarCognito(administradorDto.getEmail(), administradorDto.getPassword());
 
         }

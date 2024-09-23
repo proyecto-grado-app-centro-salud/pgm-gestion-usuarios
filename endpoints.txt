@@ -1,0 +1,99 @@
+Eliminar especialidad
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/especialidades/${idEspecialidad}
+Registrar especialidad (tipo form data data, imagen(n))
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/especialidades
+ActualizarEspecialidad
+`${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/especialidades/${idEspecialidad}`,formData
+ObtenerEspecialidad
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/especialidades/${idEspecialidad}
+ObtenerEspecialidades
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/especialidades
+
+
+
+Obtener turnos de especialidad
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/horarios-atencion-medica/especialidad/${idEspecialidad}
+
+Obtener comunicados
+`${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/v1.0/comunicados`
+Obtener comunicado (idComunicado)
+`${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/v1.0/comunicados/${idComunicado}`
+
+//Cambiar porque deifnimos que los comunicados tendrian titulo, lugar etc
+ {
+    "idComunicado": 1,
+    "titulo": "Título 1",
+    "descripcion": "Descripción del comunicado 1",
+    "imagenes": ["fondo-opciones-menu.jpg"],
+    "createdAt": "2024-08-16T12:00:00Z",
+    "updatedAt": "2024-08-16T12:00:00Z",
+    "deletedAt": null
+}
+
+
+Eliminar consultorio
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/consultorios/${idConsultorio}
+Obtener consultorios
+`${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/v1.0/consultorios
+    idConsultorio:number=0;
+    nombre:string="";
+    direccion:string="";
+    equipamiento:string="";
+    idEspecialidad:number=0;
+    nombreEspecialidad:string="";
+    codigoConsultorio:string="";
+    descripcion:string="";
+    numeroTelefono:string="";
+    capacidad:number=0;
+    createdAt:Date|null=null;
+    updatedAt:Date|null=null;
+    deletedAt:Date|null=null;
+
+Procedimientos
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/procedimientos/${idProcedimiento}/pasos/${idPasoProcedimiento}`
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/procedimientos/${idProcedimiento}
+`${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/procedimientos/${idProcedimiento}
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+Eliminar usuario
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/usuarios/${idUsuario}
+Restaurar usuario
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/usuarios/${idUsuario}/restaurar`
+Obtener usuarios
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/usuarios
+Obtener usuario por id
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/usuarios/${id}
+Registrar usuario
+return this.httpClient.post<any>("${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/usuarios",formData);
+Actualizar usuario
+return this.httpClient.put<any>(`${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-usuarios/v1.0/usuarios/${idUsuario}`,formData)
+
+Obtener medicos
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/medicos
+Obtener medico (idMedico)
+${apiUrlEnviroment.apiUrl}/api/microservicio-gestion-informacion-centro-medico/medicos/${id}
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+Ver detalle usuario (pendiente)
+Ver detalle comunicado (pendiente)
+Ver detalle consultorio (pendiente)
+
+
+
+
+
+
+Apuntes
+Optional<EspecialidadesEntity> especialidadEntity = especialidadesRepositoryJPA.findById(id);
+        if (especialidadEntity.isPresent()) {
+            EspecialidadDto especialidadDto = new EspecialidadDto().convertirEspecialidadEntityAEspecialidadDto(especialidadEntity.get());
+            especialidadDto.setImagenes(imagenesService.obtenerImagenes("especialidades", especialidadEntity.get().getIdEspecialidad()));
+            return especialidadDto;
+        } else {
+            throw new RuntimeException("Especialidad no encontrada");
+        }

@@ -40,12 +40,6 @@ public class PacientesController {
     @Autowired
     PacienteService pacienteService;
 
-    // @GetMapping()
-    // public ResponseEntity<List<PacienteEntity>> obtenerMensajePaciente() {
-    //     List<PacienteEntity> listadoPacientes=pacienteRepository.findAll();
-    //     return new ResponseEntity<List<PacienteEntity>>(listadoPacientes, HttpStatus.OK);
-    // }
-
     //@PermitAll
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'MEDICO')")
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'MEDICO')")

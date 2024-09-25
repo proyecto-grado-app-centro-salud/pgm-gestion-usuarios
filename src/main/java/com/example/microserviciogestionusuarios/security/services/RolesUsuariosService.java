@@ -48,7 +48,7 @@ public class RolesUsuariosService {
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()),rolEntity,usuarioEntity);
+        RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()),rolEntity,usuarioEntity,null,null,null,null);
         rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
     }
 

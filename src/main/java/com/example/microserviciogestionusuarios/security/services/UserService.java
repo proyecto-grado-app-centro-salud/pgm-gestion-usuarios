@@ -127,7 +127,7 @@ public class UserService {
             medicoEntity.setDireccion(medicoDto.getDireccion());
             medicoEntity.setCelular(medicoDto.getCelular());
             medicoEntity.setEmail(medicoDto.getEmail());
-            medicoEntity.setAñosExperiencia(medicoDto.getAñosExperiencia());
+            medicoEntity.setAñosExperiencia(medicoDto.getAniosExperiencia());
             medicoEntity.setSalario(medicoDto.getSalario());
             medicoEntity.setFoto(medicoDto.getFoto());
             medicoEntity.setDescripcion(medicoDto.getDescripcion());

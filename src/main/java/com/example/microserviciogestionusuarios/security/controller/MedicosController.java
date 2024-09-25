@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
 import com.example.microserviciogestionusuarios.security.repositories.MedicoRepository;
+import com.example.microserviciogestionusuarios.security.services.MedicosService;
 import com.example.microserviciogestionusuarios.security.util.ApiResponse;
 
 import jakarta.annotation.security.PermitAll;
@@ -27,19 +29,32 @@ import jakarta.annotation.security.PermitAll;
 public class MedicosController {
     @Autowired
     MedicoRepository medicoRepository;
+    @Autowired
+    MedicosService medicosService;
 
     @PermitAll
     @GetMapping
-    public ResponseEntity<List<MedicoEntity>> listadoMedicos() {
-        List<MedicoEntity> listadoMedico=medicoRepository.findAll();
-        return new ResponseEntity<List<MedicoEntity>>(listadoMedico, HttpStatus.OK);
+    public ResponseEntity<List<MedicoDto>> listadoMedicos() {
+        try{
+            List<MedicoDto> listadoMedico=medicosService.obtenerMedicosEspecialitas();
+            return new ResponseEntity<List<MedicoDto>>(listadoMedico, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        
     }
 
     @PermitAll
     @GetMapping("/{idMedico}")
-    public @ResponseBody MedicoEntity obtenerDetallePaciente(@PathVariable int idMedico) {
-        return medicoRepository.findById(idMedico)
-        .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en la peticion"));
+    public ResponseEntity<MedicoDto> obtenerDetalleMedico(@PathVariable int idMedico) {
+        try{
+            MedicoDto medicoDto=medicosService.obtenerMedicoEspecialitas(idMedico);
+            return new ResponseEntity<MedicoDto>(medicoDto, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        // return medicoRepository.findById(idMedico)
+        // .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en la peticion"));
     }
 
     @PermitAll

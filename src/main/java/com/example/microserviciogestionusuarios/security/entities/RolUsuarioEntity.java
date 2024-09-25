@@ -41,4 +41,16 @@ public class RolUsuarioEntity {
     @JoinColumn(name = "id_usuario", nullable = false, insertable = false, updatable = false)
     private UsuarioEntity usuario;
 
+    @Column(name = "anios_experiencia")
+    private Integer aniosExperiencia;
+
+    @Column(name = "descripcion_profesional")
+    private String descripcionProfesional;
+
+    @Column(name = "codigo_expediente_clinico")
+    private String codigoExpedienteClinico;
+
+    @Column(name = "ocupacion")
+    private String ocupacion;
+
 }

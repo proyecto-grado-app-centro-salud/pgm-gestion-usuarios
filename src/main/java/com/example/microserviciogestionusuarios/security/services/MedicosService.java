@@ -45,7 +45,7 @@ public class MedicosService {
         .orElseThrow(()-> new RuntimeException("Rol no encontrado"));
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idMedico)
         .orElseThrow(()-> new RuntimeException("Medico no encontrado"));
-        RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findById(new RolUsuarioId(idMedico,rolEntity.getIdRol()))
+        RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findById(new RolUsuarioId(rolEntity.getIdRol(),idMedico))
         .orElseThrow(()-> new RuntimeException("Rol usuario no encontrado"));
         MedicoDto medicoDto = new MedicoDto().convertirRolUsuarioEntityAMedicoDto(rolUsuarioEntity);
         medicoDto.setImagenes(imagenesService.obtenerImagenes("medicos", rolUsuarioEntity.getUsuario().getIdUsuario()));

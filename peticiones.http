@@ -193,10 +193,10 @@ Content-Type: application/json
 }
 
 # Medicos--------------------------------------------------------------------------------------------------------------------------------
-###
+###s
 
 ###
-GET http://localhost:8086/api/microservicio-gestion-usuarios/medicos
+GET http://localhost:8081/api/microservicio-gestion-usuarios/usuarios
 
 
 ###

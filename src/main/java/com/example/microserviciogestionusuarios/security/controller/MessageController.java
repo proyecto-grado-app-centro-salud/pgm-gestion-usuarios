@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.microserviciogestionusuarios.dtos.ResponseMessageDto;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/message")
 public class MessageController {
 

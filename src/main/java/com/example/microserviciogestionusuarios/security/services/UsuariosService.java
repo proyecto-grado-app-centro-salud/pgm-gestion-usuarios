@@ -32,7 +32,7 @@ public class UsuariosService {
     private String clientId = "4u16uooucre54ll4hcroq3g2jj";
 
     public List<UsuarioDto> obtenerUsuarios() {
-        List<UsuarioEntity> usuariosEntities = usuariosRepositoryJPA.findAllByDeletedAtIsNull();
+        List<UsuarioEntity> usuariosEntities = usuariosRepositoryJPA.findAll();
         List<UsuarioDto> usuariosDtos = new ArrayList<>();
         for (UsuarioEntity usuarioEntity : usuariosEntities) {
             UsuarioDto usuarioDto = new UsuarioDto().convertirUsuarioEntityAUsuarioDto(usuarioEntity);

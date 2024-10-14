@@ -59,7 +59,7 @@ public class RolesUsuariosService {
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        rolesUsuariosRepositoryJPA.deleteById(new RolUsuarioId(usuarioEntity.getIdUsuario(),rolEntity.getIdRol()));
+        rolesUsuariosRepositoryJPA.deleteById(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()));
     }
     
 }

@@ -33,7 +33,7 @@ public class MainSecurity {
         http.cors().and()
             .csrf().disable()
             .authorizeRequests()
-            .requestMatchers("/auth/*", "/manage/*", "/api/*", "/auth/sign-in", "/pacientes/*", "/medicos/**", "/v1.0/usuarios","/v1.0/usuarios/**","/v1.0/roles", "/v1.0/roles/**")
+            .requestMatchers("/auth/*", "/manage/*", "/api/*", "/auth/sign-in", "/pacientes/**", "/medicos/**", "/v1.0/usuarios","/v1.0/usuarios/**","/v1.0/roles", "/v1.0/roles/**")
             .permitAll()
             .anyRequest().authenticated()
             .and().exceptionHandling().authenticationEntryPoint(jwtEntryPoint)

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
 import com.example.microserviciogestionusuarios.security.repositories.PacienteRepository;
@@ -45,9 +46,13 @@ public class PacientesController {
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'MEDICO')")
     @PermitAll
     @GetMapping
-    public ResponseEntity<List<PacienteEntity>> listadoPacientes() {
-        List<PacienteEntity> listadoPacientes=pacienteRepository.findAll();
-        return new ResponseEntity<List<PacienteEntity>>(listadoPacientes, HttpStatus.OK);
+    public ResponseEntity<List<PacienteDto>> listadoPacientes() {
+        try{
+            List<PacienteDto> listadoPacientes=pacienteService.obtenerPacientes();
+            return new ResponseEntity<List<PacienteDto>>(listadoPacientes, HttpStatus.OK);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'MEDICO')")
     @PermitAll

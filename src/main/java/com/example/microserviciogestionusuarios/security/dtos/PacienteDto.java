@@ -1,6 +1,9 @@
 package com.example.microserviciogestionusuarios.security.dtos;
 
 import java.util.Date;
+import java.util.List;
+
+import com.example.microserviciogestionusuarios.security.entities.RolUsuarioEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,47 +15,40 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PacienteDto {
 
+    private int idUsuario;
+
+    private String nombres;
+
     private String apellidoPaterno;
 
     private String apellidoMaterno;
 
-    private String nombres;
-
-    private Date fechaNacimiento;
-
-    private String sexo;
-
-    private String procedencia;
-
-    private Date fechaIngreso;
-
-    private String idiomaHablado;
-
-    private String autoprescedenciaCultural;
-
-    private String ocupacion;
-
-    private String apoyoDesicionAsistenciaMedica;
-
-    private String estadoCivil;
-
-    private String escolaridad;
-
-    private String grupoSanguineo;
-
     private String ci;
 
-    private String email;
+    private String direccion;
 
     private String celular;
 
-    private Integer diasSancion;
+    private String email;
 
-    private Integer edad;
+    private String descripcion;
 
-    private String residencia;
-
-    private String codigoExpedienteClinico;
+    private String grupoSanguineo;
 
     private String password;
+
+    private List<ImagenDto> imagenes;
+
+    public PacienteDto convertirRolUsuarioEntityAPacienteDto(RolUsuarioEntity rolUsuarioEntity) {
+        this.idUsuario=rolUsuarioEntity.getUsuario().getIdUsuario();
+        this.nombres=rolUsuarioEntity.getUsuario().getNombres();
+        this.apellidoPaterno=rolUsuarioEntity.getUsuario().getApellidoPaterno();
+        this.apellidoMaterno=rolUsuarioEntity.getUsuario().getApellidoMaterno();
+        this.ci=rolUsuarioEntity.getUsuario().getCi();
+        this.direccion=rolUsuarioEntity.getUsuario().getDireccion();
+        this.celular=rolUsuarioEntity.getUsuario().getCelular();
+        this.email=rolUsuarioEntity.getUsuario().getEmail();
+        this.descripcion=rolUsuarioEntity.getDescripcionProfesional();
+        return this;
+    }
 }

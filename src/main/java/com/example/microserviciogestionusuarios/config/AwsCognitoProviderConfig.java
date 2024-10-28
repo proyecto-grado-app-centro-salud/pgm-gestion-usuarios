@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Configuration
 public class AwsCognitoProviderConfig {
-    // @Value(value = "${aws.access.key}")
-    private String accessKey="AKIA2UC277LJXGGEXZWJ";
+    @Value(value = "${aws.access.key}")
+    private String accessKey;
 
-    // @Value(value = "${aws.secret.key}")
-    private String secretKey="x1/WyrpypL5qPScw/5C3ORKD4J2ix2S0sThqRMuh";
+    @Value(value = "${aws.secret.key}")
+    private String secretKey;
 
     @Bean
     public AWSCognitoIdentityProvider awsCognitoIdentityProvider(){

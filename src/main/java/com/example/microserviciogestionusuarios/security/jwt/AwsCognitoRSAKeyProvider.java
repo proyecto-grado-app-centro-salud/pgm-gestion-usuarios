@@ -4,6 +4,10 @@ import com.auth0.jwk.JwkException;
 import com.auth0.jwk.JwkProvider;
 import com.auth0.jwk.JwkProviderBuilder;
 import com.auth0.jwt.interfaces.RSAKeyProvider;
+import com.example.microserviciogestionusuarios.security.services.UserService;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.net.MalformedURLException;
@@ -14,10 +18,14 @@ import java.security.interfaces.RSAPublicKey;
 public class AwsCognitoRSAKeyProvider implements RSAKeyProvider {
     private final URL awsStoreUrl;
     private final JwkProvider provider;
+    Logger logger = LoggerFactory.getLogger(UserService.class);
 
+    @Value("${aws.cognito.jwk}")
+    private String jwkUrl;
     public AwsCognitoRSAKeyProvider(String awsCognitoRegion, String identityPoolUrl) {
-        String jwtUrl = "https://cognito-idp.us-east-1.amazonaws.com/us-east-1_5eNqZxf2x/.well-known/jwks.json";
-        String url = String.format(jwtUrl, awsCognitoRegion, identityPoolUrl);
+        String jwkUrl = this.jwkUrl;
+        logger.info("AwsCognitoRSAKeyProvider jwkUrl="+jwkUrl);
+        String url = String.format(jwkUrl, awsCognitoRegion, identityPoolUrl);
         try {
             awsStoreUrl = new URL(url);
         } catch (MalformedURLException e) {

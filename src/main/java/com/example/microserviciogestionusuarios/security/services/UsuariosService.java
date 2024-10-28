@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,9 +28,13 @@ public class UsuariosService {
     @Autowired
     ImagenesService imagenesService;
 
-     private AWSCognitoIdentityProvider awsCognitoIdentityProvider;
+    @Autowired
+    CognitoService cognitoService;
 
-    private String clientId = "4u16uooucre54ll4hcroq3g2jj";
+    private AWSCognitoIdentityProvider awsCognitoIdentityProvider;
+
+    @Value(value = "${aws.cognito.clientId}")
+    private String clientId;
 
     public List<UsuarioDto> obtenerUsuarios() {
         List<UsuarioEntity> usuariosEntities = usuariosRepositoryJPA.findAll();
@@ -55,6 +60,7 @@ public class UsuariosService {
         Optional<UsuarioEntity> usuarioEntityExistente = usuariosRepositoryJPA.findByCiAndDeletedAtIsNull(usuarioDto.getCi());
         if(!usuarioEntityExistente.isPresent()){
             UsuarioEntity usuarioEntity = new UsuarioEntity();
+            usuarioEntity.setIdUsuario(Integer.parseInt(usuarioDto.getCi()));
             usuarioEntity.setNombres(usuarioDto.getNombres());
             usuarioEntity.setCi(usuarioDto.getCi());
             usuarioEntity.setDireccion(usuarioDto.getDireccion());
@@ -74,8 +80,7 @@ public class UsuariosService {
 
             List<MultipartFile> imagenes = imagenesService.obtenerImagenesDeArchivos(allFiles);
             imagenesService.guardarImagenes(imagenes, "usuarios", savedEntity.getIdUsuario());
-            //registrarCognito(usuarioDto.getCi(), usuarioDto.getPassword());
-
+            cognitoService.registrarUsuarioCognito(usuarioDto);
             return new UsuarioDto().convertirUsuarioEntityAUsuarioDto(savedEntity);
 
         }
@@ -112,6 +117,7 @@ public class UsuariosService {
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuarioEntity.markAsDeleted();
         usuariosRepositoryJPA.save(usuarioEntity);
+        cognitoService.deshabilitarUsuarioCognito(idUsuario);
     }
 
     public void restaurarUsuario(int idUsuario) {
@@ -119,27 +125,9 @@ public class UsuariosService {
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuarioEntity.setDeletedAt(null);;
         usuariosRepositoryJPA.save(usuarioEntity);
+        cognitoService.habilitarUsuarioCognito(idUsuario);
     }
-    public void registrarCognito(String ci, String password) {
-        try {
-            AttributeType attributeType = new AttributeType().withName("ci").withValue(ci);
-            SignUpRequest signUpRequest = new SignUpRequest()
-                    .withClientId(clientId)
-                    .withPassword(password)
-                    .withUsername(ci)
-                    .withUserAttributes(attributeType);
-
-            SignUpResult signUpResult = awsCognitoIdentityProvider.signUp(signUpRequest);
-
-        } catch (AWSCognitoIdentityProviderException e) {
-            System.err.println("Error de Cognito: " + e.getErrorMessage());
-            throw e;  
-        } catch (Exception e) {
-            System.err.println("Error desconocido: " + e.getMessage());
-            throw e; 
-        }
-    }
-    public UsuarioDto obtenerUsurioPorId(int idUsuario) {
+    public UsuarioDto obtenerUsuarioPorId(int idUsuario) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         UsuarioDto usuarioDto = new UsuarioDto().convertirUsuarioEntityAUsuarioDto(usuarioEntity);

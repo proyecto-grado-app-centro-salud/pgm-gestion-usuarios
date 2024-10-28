@@ -4,35 +4,48 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
+import com.amazonaws.services.cognitoidp.model.AdminAddUserToGroupRequest;
+import com.amazonaws.services.cognitoidp.model.AdminRemoveUserFromGroupRequest;
+import com.amazonaws.services.cognitoidp.model.AdminSetUserPasswordRequest;
 import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.AuthFlowType;
+import com.amazonaws.services.cognitoidp.model.ChallengeNameType;
+import com.amazonaws.services.cognitoidp.model.ChangePasswordRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthRequest;
 import com.amazonaws.services.cognitoidp.model.InitiateAuthResult;
+import com.amazonaws.services.cognitoidp.model.RespondToAuthChallengeRequest;
+import com.amazonaws.services.cognitoidp.model.RespondToAuthChallengeResult;
 import com.amazonaws.services.cognitoidp.model.SignUpRequest;
 import com.amazonaws.services.cognitoidp.model.SignUpResult;
 import com.example.microserviciogestionusuarios.security.dtos.AdministradorDto;
 import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
+import com.example.microserviciogestionusuarios.security.dtos.UsuarioDto;
 import com.example.microserviciogestionusuarios.security.entities.AdministradorEntity;
 import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
 import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
+import com.example.microserviciogestionusuarios.security.entities.RolEntity;
 import com.example.microserviciogestionusuarios.security.enums.RoleName;
 import com.example.microserviciogestionusuarios.security.repositories.AdministradorRepository;
 import com.example.microserviciogestionusuarios.security.repositories.MedicoRepository;
 import com.example.microserviciogestionusuarios.security.repositories.PacienteRepository;
+import com.example.microserviciogestionusuarios.security.repositories.RolesRepositoryJPA;
 
 @Service
 public class UserService {
     // @Autowired
     // private UserRepository userRepository;
-
+    Logger logger = LoggerFactory.getLogger(UserService.class);
     @Autowired
     private PacienteRepository pacienteRepository;
 
@@ -42,13 +55,21 @@ public class UserService {
     @Autowired
     private AdministradorRepository administradorRepository;
 
+
+
+
+
+
+    @Autowired
+    private RolesRepositoryJPA rolesRepositoryJPA;
+
     private AWSCognitoIdentityProvider awsCognitoIdentityProvider;
 
-    // @Autowired
-    // private RoleService roleService;
+    @Value(value = "${aws.cognito.userPoolId}")
+    private String userPoolId;
 
-    // @Value(value = "${aws.cognito.clientId}")
-    private String clientId = "4u16uooucre54ll4hcroq3g2jj";
+    @Value(value = "${aws.cognito.clientId}")
+    private String clientId;
 
     public UserService(AWSCognitoIdentityProvider awsCognitoIdentityProvider) {
         this.awsCognitoIdentityProvider = awsCognitoIdentityProvider;
@@ -76,41 +97,73 @@ public class UserService {
     // userRepository.save(user);
     // }
 
-    public void signUpPaciente(PacienteDto pacienteDto) throws Exception {
-        Optional<PacienteEntity> pacienteEntityOptional = findByEmailPaciente(pacienteDto.getEmail());
-        Optional<MedicoEntity> medicoEntityOptional = findByEmailMedico(pacienteDto.getEmail());
-        Optional<AdministradorEntity> administradorEntity = findByEmailAdministrador(pacienteDto.getEmail());
-        if (pacienteEntityOptional.isPresent()) {
-            throw new Exception();
-        } else {
-            PacienteEntity pacienteEntity = new PacienteEntity();
-            pacienteEntity.setApellidoPaterno(pacienteDto.getApellidoPaterno());
-            pacienteEntity.setApellidoMaterno(pacienteDto.getApellidoMaterno());
-            pacienteEntity.setNombres(pacienteDto.getNombres());
-            pacienteEntity.setFechaNacimiento(pacienteDto.getFechaNacimiento());
-            pacienteEntity.setSexo(pacienteDto.getSexo());
-            pacienteEntity.setProcedencia(pacienteDto.getProcedencia());
-            pacienteEntity.setFechaIngreso(pacienteDto.getFechaIngreso());
-            pacienteEntity.setIdiomaHablado(pacienteDto.getIdiomaHablado());
-            pacienteEntity.setAutoprescedenciaCultural(pacienteDto.getAutoprescedenciaCultural());
-            pacienteEntity.setOcupacion(pacienteDto.getOcupacion());
-            pacienteEntity.setApoyoDesicionAsistenciaMedica(pacienteDto.getApoyoDesicionAsistenciaMedica());
-            pacienteEntity.setEstadoCivil(pacienteDto.getEstadoCivil());
-            pacienteEntity.setEscolaridad(pacienteDto.getEscolaridad());
-            pacienteEntity.setGrupoSanguineo(pacienteDto.getGrupoSanguineo());
-            pacienteEntity.setCi(pacienteDto.getCi());
-            pacienteEntity.setEmail(pacienteDto.getEmail());
-            pacienteEntity.setCelular(pacienteDto.getCelular());
-            pacienteEntity.setDiasSancion(pacienteDto.getDiasSancion());
-            pacienteEntity.setEdad(pacienteDto.getEdad());
-            pacienteEntity.setResidencia(pacienteDto.getResidencia());
-            pacienteEntity.setCodigoExpedienteClinico(pacienteDto.getCodigoExpedienteClinico());
-            pacienteRepository.save(pacienteEntity);
-        }
+    // public void signUpPaciente(PacienteDto pacienteDto) throws Exception {
+    //     // Optional<PacienteEntity> pacienteEntityOptional = findByEmailPaciente(pacienteDto.getEmail());
+    //     // Optional<MedicoEntity> medicoEntityOptional = findByEmailMedico(pacienteDto.getEmail());
+    //     // Optional<AdministradorEntity> administradorEntity = findByEmailAdministrador(pacienteDto.getEmail());
+    //     // if (pacienteEntityOptional.isPresent()) {
+    //     //     throw new Exception();
+    //     // } else {
+    //     //     PacienteEntity pacienteEntity = new PacienteEntity();
+    //     //     pacienteEntity.setApellidoPaterno(pacienteDto.getApellidoPaterno());
+    //     //     pacienteEntity.setApellidoMaterno(pacienteDto.getApellidoMaterno());
+    //     //     pacienteEntity.setNombres(pacienteDto.getNombres());
+    //     //     pacienteEntity.setFechaNacimiento(pacienteDto.getFechaNacimiento());
+    //     //     pacienteEntity.setSexo(pacienteDto.getSexo());
+    //     //     pacienteEntity.setProcedencia(pacienteDto.getProcedencia());
+    //     //     pacienteEntity.setFechaIngreso(pacienteDto.getFechaIngreso());
+    //     //     pacienteEntity.setIdiomaHablado(pacienteDto.getIdiomaHablado());
+    //     //     pacienteEntity.setAutoprescedenciaCultural(pacienteDto.getAutoprescedenciaCultural());
+    //     //     pacienteEntity.setOcupacion(pacienteDto.getOcupacion());
+    //     //     pacienteEntity.setApoyoDesicionAsistenciaMedica(pacienteDto.getApoyoDesicionAsistenciaMedica());
+    //     //     pacienteEntity.setEstadoCivil(pacienteDto.getEstadoCivil());
+    //     //     pacienteEntity.setEscolaridad(pacienteDto.getEscolaridad());
+    //     //     pacienteEntity.setGrupoSanguineo(pacienteDto.getGrupoSanguineo());
+    //     //     pacienteEntity.setCi(pacienteDto.getCi());
+    //     //     pacienteEntity.setEmail(pacienteDto.getEmail());
+    //     //     pacienteEntity.setCelular(pacienteDto.getCelular());
+    //     //     pacienteEntity.setDiasSancion(pacienteDto.getDiasSancion());
+    //     //     pacienteEntity.setEdad(pacienteDto.getEdad());
+    //     //     pacienteEntity.setResidencia(pacienteDto.getResidencia());
+    //     //     pacienteEntity.setCodigoExpedienteClinico(pacienteDto.getCodigoExpedienteClinico());
+    //     //     pacienteRepository.save(pacienteEntity);
+    //     // }
 
-        if (!pacienteEntityOptional.isPresent() && !medicoEntityOptional.isPresent()
-                && !administradorEntity.isPresent()) {
-            registrarCognito(pacienteDto.getEmail(), pacienteDto.getPassword());
+    //     // if (!pacienteEntityOptional.isPresent() && !medicoEntityOptional.isPresent()
+    //     //         && !administradorEntity.isPresent()) {
+    //     //     registrarCognito(pacienteDto.getEmail(), pacienteDto.getPassword());
+    //     // }
+    //     registrarUsuarioCognito(pacienteDto);
+
+    // }
+
+    public Optional<PacienteEntity> findByEmailPaciente(String email) {
+        return pacienteRepository.findByEmail(email);
+    }
+
+    public Optional<MedicoEntity> findByEmailMedico(String email) {
+        return medicoRepository.findByEmail(email);
+    }
+
+    public Optional<AdministradorEntity> findByEmailAdministrador(String email) {
+        return administradorRepository.findByEmail(email);
+    }
+    private void registrarUsuarioCognito(UsuarioDto usuarioDto) {
+        try {
+            AttributeType attributeType = new AttributeType().withName("email").withValue(usuarioDto.getEmail());
+            SignUpRequest signUpRequest = new SignUpRequest()
+                    .withClientId(clientId)
+                    .withPassword(usuarioDto.getPassword())
+                    .withUsername(usuarioDto.getCi())
+                    .withUserAttributes(attributeType);
+
+            awsCognitoIdentityProvider.signUp(signUpRequest);
+        } catch (AWSCognitoIdentityProviderException e) {
+            System.err.println("Error de Cognito: " + e.getErrorMessage());
+            throw e;  
+        } catch (Exception e) {
+            System.err.println("Error desconocido: " + e.getMessage());
+            throw e; 
         }
     }
 
@@ -139,7 +192,7 @@ public class UserService {
         }
         if (!pacienteEntityOptional.isPresent() && !medicoEntityOptional.isPresent()
                 && !administradorEntity.isPresent()) {
-            registrarCognito(medicoDto.getEmail(), medicoDto.getPassword());
+            registrarUsuarioCognito(medicoDto.getEmail(), medicoDto.getPassword());
         }
 
     }
@@ -164,12 +217,12 @@ public class UserService {
         }
         if (!pacienteEntityOptional.isPresent() && !medicoEntityOptional.isPresent()
                 && !administradorEntityOptional.isPresent()) {
-            registrarCognito(administradorDto.getEmail(), administradorDto.getPassword());
+            registrarUsuarioCognito(administradorDto.getEmail(), administradorDto.getPassword());
 
         }
 
     }
-    public void registrarCognito(String email, String password) {
+    public void registrarUsuarioCognito(String email, String password) {
         try {
             AttributeType attributeType = new AttributeType().withName("email").withValue(email);
             SignUpRequest signUpRequest = new SignUpRequest()
@@ -178,8 +231,7 @@ public class UserService {
                     .withUsername(email)
                     .withUserAttributes(attributeType);
 
-            SignUpResult signUpResult = awsCognitoIdentityProvider.signUp(signUpRequest);
-
+            awsCognitoIdentityProvider.signUp(signUpRequest);
         } catch (AWSCognitoIdentityProviderException e) {
             System.err.println("Error de Cognito: " + e.getErrorMessage());
             throw e;  
@@ -188,42 +240,54 @@ public class UserService {
             throw e; 
         }
     }
-    // public void registrarCognito(String email, String password) {
-    //     AttributeType attributeType = new AttributeType().withName("email").withValue(email);
-    //     SignUpRequest signUpRequest = new SignUpRequest();
-    //     signUpRequest.withClientId(clientId)
-    //             .withPassword(password)
-    //             .withUsername(email)
-    //             .withUserAttributes(attributeType);
-    //     awsCognitoIdentityProvider.signUp(signUpRequest);
-    // }
 
-    public String signInUser(SignInDto signInDto) {
+    public String iniciarSesionUsuarioCognito(SignInDto signInDto) {
         final Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", signInDto.getEmail());
         authParams.put("PASSWORD", signInDto.getPassword());
-
         InitiateAuthRequest initialAuthRequest = new InitiateAuthRequest()
                 .withAuthFlow(AuthFlowType.USER_PASSWORD_AUTH)
                 .withClientId(clientId)
                 .withAuthParameters(authParams);
-
-        InitiateAuthResult initiateAuthResult = awsCognitoIdentityProvider.initiateAuth(initialAuthRequest);
-        return initiateAuthResult.getAuthenticationResult().getAccessToken();
+        try {
+            InitiateAuthResult initiateAuthResult = awsCognitoIdentityProvider.initiateAuth(initialAuthRequest);
+            if (initiateAuthResult.getAuthenticationResult() == null) {
+                if (initiateAuthResult.getChallengeName() != null && 
+                    initiateAuthResult.getChallengeName().equals("NEW_PASSWORD_REQUIRED")) {                    
+                    RespondToAuthChallengeRequest challengeRequest = new RespondToAuthChallengeRequest()
+                            .withChallengeName(ChallengeNameType.NEW_PASSWORD_REQUIRED)
+                            .withClientId(clientId)
+                            .withChallengeResponses(authParams)
+                            .withSession(initiateAuthResult.getSession());
+                    try {
+                        RespondToAuthChallengeResult challengeResult = awsCognitoIdentityProvider.respondToAuthChallenge(challengeRequest);
+                        return challengeResult.getAuthenticationResult().getAccessToken();
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error responding to password change challenge: " + e.getMessage(), e);
+                    }
+                }
+                throw new RuntimeException("Authentication result is null. Check your credentials.");
+            }
+            return initiateAuthResult.getAuthenticationResult().getAccessToken();
+        } catch (Exception e) {
+            throw new RuntimeException("Error during sign in: " + e.getMessage(), e);
+        }
     }
 
-    public Optional<PacienteEntity> findByEmailPaciente(String email) {
-        return pacienteRepository.findByEmail(email);
+    public void eliminarRolCognitoUsuario(int idUsuario, int idRol){
+        rolesRepositoryJPA.findById(idRol).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        AdminRemoveUserFromGroupRequest request = new AdminRemoveUserFromGroupRequest()
+                .withUserPoolId(userPoolId)
+                .withUsername(Integer.toString(idUsuario))
+                .withGroupName(Integer.toString(idUsuario));
+        awsCognitoIdentityProvider.adminRemoveUserFromGroup(request);
     }
-
-    public Optional<MedicoEntity> findByEmailMedico(String email) {
-        return medicoRepository.findByEmail(email);
+    public void agregarRolCognitoUsuario(int idUsuario, int idRol){
+        rolesRepositoryJPA.findById(idRol).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        AdminAddUserToGroupRequest request = new AdminAddUserToGroupRequest()
+                .withUserPoolId(userPoolId)
+                .withUsername(Integer.toString(idUsuario))
+                .withGroupName(Integer.toString(idUsuario));
+        awsCognitoIdentityProvider.adminAddUserToGroup(request);
     }
-
-    public Optional<AdministradorEntity> findByEmailAdministrador(String email) {
-        return administradorRepository.findByEmail(email);
-    }
-    // public Optional<User> findByEmail(String email){
-    // return userRepository.findByEmail(email);
-    // }
 }

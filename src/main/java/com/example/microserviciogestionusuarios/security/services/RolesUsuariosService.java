@@ -23,7 +23,8 @@ public class RolesUsuariosService {
     RolesUsuariosRepositoryJPA rolesUsuariosRepositoryJPA;
     @Autowired
     RolesRepositoryJPA rolesRepositoryJPA;
-
+    @Autowired
+    CognitoService cognitoService;
     @Autowired
     ImagenesService imagenesService;
 
@@ -50,6 +51,8 @@ public class RolesUsuariosService {
 
         RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()),rolEntity,usuarioEntity,null,null,null,null);
         rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
+        
+        cognitoService.agregarRolCognitoUsuario(idUsuario, idRol);
     }
 
     public void eliminarRolUsuario(int idUsuario, int idRol) {
@@ -60,6 +63,8 @@ public class RolesUsuariosService {
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         rolesUsuariosRepositoryJPA.deleteById(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()));
+
+        cognitoService.eliminarRolCognitoUsuario(idUsuario, idRol);
     }
     
 }

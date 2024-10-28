@@ -1,7 +1,6 @@
 package com.example.microserviciogestionusuarios.security.jwt;
 import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
-
-
+import com.example.microserviciogestionusuarios.security.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -9,6 +8,9 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.RSAKeyProvider;
 import lombok.extern.slf4j.Slf4j;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,15 +18,16 @@ import org.springframework.beans.factory.annotation.Value;
 @Slf4j
 @Component
 public class JwtProvider {
+    Logger logger = LoggerFactory.getLogger(UserService.class);
 
-    // @Value(value = "${aws.cognito.identifyPoolUrl}")
-    private String identityPoolUrl="https://cognito-idp.us-east-1.amazonaws.com/us-east-1_5eNqZxf2x";
+    @Value(value = "${aws.cognito.identifyPoolUrl}")
+    private String identityPoolUrl;
 
-    // @Value(value = "${aws.cognito.region}")
-    private String region="us-east-1";
+    @Value(value = "${aws.cognito.region}")
+    private String region;
 
-    // @Value(value = "${aws.cognito.issuer}")
-    private String issuer="https://cognito-idp.us-east-1.amazonaws.com/us-east-1_5eNqZxf2x";
+    @Value(value = "${aws.cognito.issuer}")
+    private String issuer;
 
     private static final String USERNAME = "username";
 

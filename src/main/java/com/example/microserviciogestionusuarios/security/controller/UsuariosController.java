@@ -61,7 +61,7 @@ public class UsuariosController {
     @GetMapping(value = "/id/{idUsuario}")
     public ResponseEntity<UsuarioDto> getUsuarioByCi(@PathVariable int idUsuario) {
         try {
-            UsuarioDto userDto = usuariosService.obtenerUsurioPorId(idUsuario);
+            UsuarioDto userDto = usuariosService.obtenerUsuarioPorId(idUsuario);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -76,6 +76,7 @@ public class UsuariosController {
             UsuarioDto createdUsuario = usuariosService.crearUsuario(userDto, allFiles);
             return new ResponseEntity<>(createdUsuario, HttpStatus.CREATED);
         } catch (Exception e) {
+            logger.info(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -30,7 +30,7 @@ public class ImagenEntity {
     private int idImagen;
 
     @Column(name = "imageable_id")
-    private Integer imageableId;
+    private String imageableId;
 
     @Column(name = "imageable_type")
     private String imageableType;

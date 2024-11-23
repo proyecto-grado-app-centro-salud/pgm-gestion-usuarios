@@ -9,5 +9,5 @@ import java.util.List;
 
 @Repository
 public interface ImagenesRepositoryJPA extends JpaRepository<ImagenEntity, Integer> {
-    List<ImagenEntity> findByImageableTypeAndImageableIdAndDeletedAtIsNull(String imageableType, Integer imageableId);
+    List<ImagenEntity> findByImageableTypeAndImageableIdAndDeletedAtIsNull(String imageableType, String imageableId);
 }

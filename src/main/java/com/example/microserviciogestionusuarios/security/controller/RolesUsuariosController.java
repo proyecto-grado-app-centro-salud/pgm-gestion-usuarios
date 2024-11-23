@@ -22,31 +22,36 @@ public class RolesUsuariosController {
     private RolesUsuariosService rolesUsuariosService;
 
     @GetMapping(value = "/{idUsuario}/roles")
-    public ResponseEntity<List<RolDto>> getRolesUsuario(@PathVariable int idUsuario) {
+    public ResponseEntity<List<RolDto>> getRolesUsuario(@PathVariable String idUsuario) {
         try {
             return new ResponseEntity<>(rolesUsuariosService.obtenerRolesDeUsuario(idUsuario), HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
 
     @PostMapping(value = "/{idUsuario}/roles/{idRol}")
-    public ResponseEntity<Void> createRolUsuario(@PathVariable int idUsuario,@PathVariable int idRol) {
+    public ResponseEntity<Void> createRolUsuario(@PathVariable String idUsuario,@PathVariable int idRol) {
         try {
             rolesUsuariosService.crearRolUsuario(idUsuario, idRol);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
+
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @DeleteMapping("/{idUsuario}/roles/{idRol}")
-    public ResponseEntity<Void> deleteRolUsuario(@PathVariable int idUsuario,@PathVariable int idRol) {
+    public ResponseEntity<Void> deleteRolUsuario(@PathVariable String idUsuario,@PathVariable int idRol) {
         try {
             rolesUsuariosService.eliminarRolUsuario(idUsuario,idRol);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
+
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

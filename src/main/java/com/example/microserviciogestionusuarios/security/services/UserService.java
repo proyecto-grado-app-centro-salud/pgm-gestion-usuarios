@@ -16,6 +16,7 @@ import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderExcepti
 import com.amazonaws.services.cognitoidp.model.AdminAddUserToGroupRequest;
 import com.amazonaws.services.cognitoidp.model.AdminRemoveUserFromGroupRequest;
 import com.amazonaws.services.cognitoidp.model.AdminSetUserPasswordRequest;
+import com.amazonaws.services.cognitoidp.model.AdminSetUserPasswordResult;
 import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.AuthFlowType;
 import com.amazonaws.services.cognitoidp.model.ChallengeNameType;
@@ -31,6 +32,7 @@ import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
 import com.example.microserviciogestionusuarios.security.dtos.UsuarioDto;
+import com.example.microserviciogestionusuarios.security.entities.UsuarioEntity;
 import com.example.microserviciogestionusuarios.security.entities.AdministradorEntity;
 import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
 import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
@@ -40,6 +42,7 @@ import com.example.microserviciogestionusuarios.security.repositories.Administra
 import com.example.microserviciogestionusuarios.security.repositories.MedicoRepository;
 import com.example.microserviciogestionusuarios.security.repositories.PacienteRepository;
 import com.example.microserviciogestionusuarios.security.repositories.RolesRepositoryJPA;
+import com.example.microserviciogestionusuarios.security.repositories.UsuariosRepositoryJPA;
 
 @Service
 public class UserService {
@@ -56,7 +59,8 @@ public class UserService {
     private AdministradorRepository administradorRepository;
 
 
-
+    @Autowired
+    private UsuariosRepositoryJPA usuariosRepositoryJPA;
 
 
 
@@ -136,7 +140,22 @@ public class UserService {
     //     registrarUsuarioCognito(pacienteDto);
 
     // }
+    public void cambiarPassword(String username, String nuevoPassword,String codigoVerificacion) {
+        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById((username)).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        if(usuarioEntity.getCodigoVerificacion().equals(codigoVerificacion)){
+            usuarioEntity.setCodigoVerificacion(null);
+            usuariosRepositoryJPA.save(usuarioEntity);
+            AdminSetUserPasswordRequest passwordRequest = new AdminSetUserPasswordRequest()
+                    .withUsername(username)
+                    .withUserPoolId(userPoolId) 
+                    .withPassword(nuevoPassword) 
+                    .withPermanent(true);
 
+            AdminSetUserPasswordResult response = awsCognitoIdentityProvider.adminSetUserPassword(passwordRequest);
+        }else{
+            throw new RuntimeException("Codigo de verificacion incorrecto");
+        }
+    }
     public Optional<PacienteEntity> findByEmailPaciente(String email) {
         return pacienteRepository.findByEmail(email);
     }
@@ -242,7 +261,7 @@ public class UserService {
     }
 
     public String iniciarSesionUsuarioCognito(SignInDto signInDto) {
-        final Map<String, String> authParams = new HashMap<>();
+        Map<String, String> authParams = new HashMap<>();
         authParams.put("USERNAME", signInDto.getEmail());
         authParams.put("PASSWORD", signInDto.getPassword());
         InitiateAuthRequest initialAuthRequest = new InitiateAuthRequest()
@@ -253,7 +272,10 @@ public class UserService {
             InitiateAuthResult initiateAuthResult = awsCognitoIdentityProvider.initiateAuth(initialAuthRequest);
             if (initiateAuthResult.getAuthenticationResult() == null) {
                 if (initiateAuthResult.getChallengeName() != null && 
-                    initiateAuthResult.getChallengeName().equals("NEW_PASSWORD_REQUIRED")) {                    
+                    initiateAuthResult.getChallengeName().equals("NEW_PASSWORD_REQUIRED")) {   
+                        authParams = new HashMap<>();
+                        authParams.put("USERNAME", signInDto.getEmail());
+                        authParams.put("NEW_PASSWORD", signInDto.getPassword());                 
                     RespondToAuthChallengeRequest challengeRequest = new RespondToAuthChallengeRequest()
                             .withChallengeName(ChallengeNameType.NEW_PASSWORD_REQUIRED)
                             .withClientId(clientId)
@@ -273,7 +295,6 @@ public class UserService {
             throw new RuntimeException("Error during sign in: " + e.getMessage(), e);
         }
     }
-
     public void eliminarRolCognitoUsuario(int idUsuario, int idRol){
         rolesRepositoryJPA.findById(idRol).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         AdminRemoveUserFromGroupRequest request = new AdminRemoveUserFromGroupRequest()

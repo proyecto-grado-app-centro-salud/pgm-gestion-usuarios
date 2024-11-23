@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.amazonaws.services.cognitoidp.model.AWSCognitoIdentityProviderException;
+import com.amazonaws.services.cognitoidp.model.AdminSetUserPasswordRequest;
+import com.amazonaws.services.cognitoidp.model.AdminSetUserPasswordResult;
 import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.SignUpRequest;
 import com.amazonaws.services.cognitoidp.model.SignUpResult;
@@ -31,11 +34,17 @@ public class UsuariosService {
     @Autowired
     CognitoService cognitoService;
 
+    @Autowired
+    EmailService emailService;
+
     private AWSCognitoIdentityProvider awsCognitoIdentityProvider;
 
     @Value(value = "${aws.cognito.clientId}")
     private String clientId;
 
+    @Value(value = "${aws.cognito.userPoolId}")
+    private String userPoolId;
+    
     public List<UsuarioDto> obtenerUsuarios() {
         List<UsuarioEntity> usuariosEntities = usuariosRepositoryJPA.findAll();
         List<UsuarioDto> usuariosDtos = new ArrayList<>();
@@ -60,7 +69,7 @@ public class UsuariosService {
         Optional<UsuarioEntity> usuarioEntityExistente = usuariosRepositoryJPA.findByCiAndDeletedAtIsNull(usuarioDto.getCi());
         if(!usuarioEntityExistente.isPresent()){
             UsuarioEntity usuarioEntity = new UsuarioEntity();
-            usuarioEntity.setIdUsuario(Integer.parseInt(usuarioDto.getCi()));
+            usuarioEntity.setIdUsuario((usuarioDto.getCi()));
             usuarioEntity.setNombres(usuarioDto.getNombres());
             usuarioEntity.setCi(usuarioDto.getCi());
             usuarioEntity.setDireccion(usuarioDto.getDireccion());
@@ -73,7 +82,6 @@ public class UsuariosService {
             usuarioEntity.setSexo(usuarioDto.getSexo());
             usuarioEntity.setEstadoCivil(usuarioDto.getEstadoCivil());
             usuarioEntity.setEdad(usuarioDto.getEdad());
-            usuarioEntity.setDiasSancionPeticionFichaPresencial(usuarioDto.getDiasSancionPeticionFichaPresencial());
             usuarioEntity.setTelefono(usuarioDto.getTelefono());
 
             UsuarioEntity savedEntity = usuariosRepositoryJPA.save(usuarioEntity);
@@ -87,12 +95,11 @@ public class UsuariosService {
         throw new RuntimeException("Usuario ya existe");
     }
 
-    public UsuarioDto actualizarUsuario(int idUsuario, UsuarioDto usuarioDto, Map<String, MultipartFile> allFiles,Map<String, String> params) {
+    public UsuarioDto actualizarUsuario(String idUsuario, UsuarioDto usuarioDto, Map<String, MultipartFile> allFiles,Map<String, String> params) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         usuarioEntity.setNombres(usuarioDto.getNombres());
-        usuarioEntity.setCi(usuarioDto.getCi());
         usuarioEntity.setDireccion(usuarioDto.getDireccion());
         usuarioEntity.setCelular(usuarioDto.getCelular());
         usuarioEntity.setEmail(usuarioDto.getEmail());
@@ -103,7 +110,6 @@ public class UsuariosService {
         usuarioEntity.setSexo(usuarioDto.getSexo());
         usuarioEntity.setEstadoCivil(usuarioDto.getEstadoCivil());
         usuarioEntity.setEdad(usuarioDto.getEdad());
-        usuarioEntity.setDiasSancionPeticionFichaPresencial(usuarioDto.getDiasSancionPeticionFichaPresencial());
         usuarioEntity.setTelefono(usuarioDto.getTelefono());
 
         UsuarioEntity updatedEntity = usuariosRepositoryJPA.save(usuarioEntity);
@@ -112,7 +118,7 @@ public class UsuariosService {
         return new UsuarioDto().convertirUsuarioEntityAUsuarioDto(updatedEntity);
     }
 
-    public void eliminarUsuario(int idUsuario) {
+    public void eliminarUsuario(String idUsuario) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuarioEntity.markAsDeleted();
@@ -120,19 +126,27 @@ public class UsuariosService {
         cognitoService.deshabilitarUsuarioCognito(idUsuario);
     }
 
-    public void restaurarUsuario(int idUsuario) {
+    public void restaurarUsuario(String idUsuario) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         usuarioEntity.setDeletedAt(null);;
         usuariosRepositoryJPA.save(usuarioEntity);
         cognitoService.habilitarUsuarioCognito(idUsuario);
     }
-    public UsuarioDto obtenerUsuarioPorId(int idUsuario) {
+    public UsuarioDto obtenerUsuarioPorId(String idUsuario) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         UsuarioDto usuarioDto = new UsuarioDto().convertirUsuarioEntityAUsuarioDto(usuarioEntity);
         List<ImagenDto> imagenes = imagenesService.obtenerImagenes("usuarios", usuarioEntity.getIdUsuario());
         usuarioDto.setImagenes(imagenes);
         return usuarioDto;
+    }
+    public void obtenerCodigoVerificacion(String idUsuario) {
+        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario)
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        final String codigoVerificacion=UUID.randomUUID().toString();
+        emailService.sendSimpleEmail(usuarioEntity.getEmail(), "Codigo de verificacion",codigoVerificacion);
+        usuarioEntity.setCodigoVerificacion(codigoVerificacion);
+        usuariosRepositoryJPA.save(usuarioEntity);
     }
 }

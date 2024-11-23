@@ -39,18 +39,21 @@ public class MedicosController {
             List<MedicoDto> listadoMedico=medicosService.obtenerMedicosEspecialitas();
             return new ResponseEntity<List<MedicoDto>>(listadoMedico, HttpStatus.OK);
         }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         
     }
 
+
     @PermitAll
     @GetMapping("/{idMedico}")
-    public ResponseEntity<MedicoDto> obtenerDetalleMedico(@PathVariable int idMedico) {
+    public ResponseEntity<MedicoDto> obtenerDetalleMedico(@PathVariable String idMedico) {
         try{
             MedicoDto medicoDto=medicosService.obtenerMedicoEspecialitas(idMedico);
             return new ResponseEntity<MedicoDto>(medicoDto, HttpStatus.OK);
         }catch(Exception e){
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         // return medicoRepository.findById(idMedico)

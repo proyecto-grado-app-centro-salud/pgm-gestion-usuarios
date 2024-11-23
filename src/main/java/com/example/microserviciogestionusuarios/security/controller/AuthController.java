@@ -66,53 +66,53 @@ public class AuthController {
     //     return userService.findByEmail(email);
     // }
     
-    @GetMapping("/user-details")
-    public UserDetailsDto getUserDetails(){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        List<String> roles = new ArrayList<>();
-        UserDetailsDto userDetailsDto=new UserDetailsDto(roles, 0, 0, 0, email, "");
-        Optional<PacienteEntity> pacienteOptional=userService.findByEmailPaciente(email);
-        Optional<MedicoEntity> medicoOptional=userService.findByEmailMedico(email);
-        Optional<AdministradorEntity> administradorOptional=userService.findByEmailAdministrador(email);
-        if (pacienteOptional.isPresent()) {
-            userDetailsDto.setCi(pacienteOptional.get().getCi());
-            userDetailsDto.setIdPaciente(pacienteOptional.get().getIdPaciente());
-            roles.add("PACIENTE");
-        }
+    // @GetMapping("/user-details")
+    // public UserDetailsDto getUserDetails(){
+    //     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    //     String email = userDetails.getUsername();
+    //     List<String> roles = new ArrayList<>();
+    //     UserDetailsDto userDetailsDto=new UserDetailsDto(roles, 0, 0, 0, email, "");
+    //     Optional<PacienteEntity> pacienteOptional=userService.findByEmailPaciente(email);
+    //     Optional<MedicoEntity> medicoOptional=userService.findByEmailMedico(email);
+    //     Optional<AdministradorEntity> administradorOptional=userService.findByEmailAdministrador(email);
+    //     if (pacienteOptional.isPresent()) {
+    //         userDetailsDto.setCi(pacienteOptional.get().getCi());
+    //         userDetailsDto.setIdPaciente(pacienteOptional.get().getIdPaciente());
+    //         roles.add("PACIENTE");
+    //     }
         
-        if (medicoOptional.isPresent()) {
-            userDetailsDto.setCi(medicoOptional.get().getCi());
-            userDetailsDto.setIdMedico(medicoOptional.get().getIdMedico());
-            roles.add("MEDICO");
-        }
+    //     if (medicoOptional.isPresent()) {
+    //         userDetailsDto.setCi(medicoOptional.get().getCi());
+    //         userDetailsDto.setIdMedico(medicoOptional.get().getIdMedico());
+    //         roles.add("MEDICO");
+    //     }
         
-        if (administradorOptional.isPresent()) {
-            userDetailsDto.setCi(administradorOptional.get().getCi());
-            userDetailsDto.setIdAdministrador(administradorOptional.get().getIdAdministrador());
-            roles.add("ADMINISTRADOR");
-        }
-        userDetailsDto.setRoles(roles);
-        return userDetailsDto;
-    }
-    @GetMapping("/detalles-paciente")
-    public Optional<PacienteEntity> getPacienteDetail(){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        return userService.findByEmailPaciente(email);
-    }
+    //     if (administradorOptional.isPresent()) {
+    //         userDetailsDto.setCi(administradorOptional.get().getCi());
+    //         userDetailsDto.setIdAdministrador(administradorOptional.get().getIdAdministrador());
+    //         roles.add("ADMINISTRADOR");
+    //     }
+    //     userDetailsDto.setRoles(roles);
+    //     return userDetailsDto;
+    // }
+    // @GetMapping("/detalles-paciente")
+    // public Optional<PacienteEntity> getPacienteDetail(){
+    //     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    //     String email = userDetails.getUsername();
+    //     return userService.findByEmailPaciente(email);
+    // }
 
-    @GetMapping("/detalles-medico")
-    public Optional<MedicoEntity> getMedicoDetails(){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        return userService.findByEmailMedico(email);
-    }
+    // @GetMapping("/detalles-medico")
+    // public Optional<MedicoEntity> getMedicoDetails(){
+    //     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    //     String email = userDetails.getUsername();
+    //     return userService.findByEmailMedico(email);
+    // }
 
-    @GetMapping("/detalles-administrador")
-    public Optional<AdministradorEntity> getAdmnistradorDetails(){
-        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String email = userDetails.getUsername();
-        return userService.findByEmailAdministrador(email);
-    }
+    // @GetMapping("/detalles-administrador")
+    // public Optional<AdministradorEntity> getAdmnistradorDetails(){
+    //     UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    //     String email = userDetails.getUsername();
+    //     return userService.findByEmailAdministrador(email);
+    // }
 }

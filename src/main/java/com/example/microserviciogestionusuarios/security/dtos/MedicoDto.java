@@ -11,7 +11,7 @@ import java.util.List;
 @Getter @Setter
 @NoArgsConstructor
 public class MedicoDto {
-    private int idUsuario;
+    private String idUsuario;
 
     private String nombres;
 

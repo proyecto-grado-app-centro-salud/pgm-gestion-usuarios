@@ -98,7 +98,7 @@ public class CognitoService {
         }
     }
 
-    public void eliminarRolCognitoUsuario(int idUsuario, int idRol){
+    public void eliminarRolCognitoUsuario(String idUsuario, int idRol){
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         AdminRemoveUserFromGroupRequest request = new AdminRemoveUserFromGroupRequest()
@@ -107,7 +107,7 @@ public class CognitoService {
                 .withGroupName(rolEntity.getNombre());
         awsCognitoIdentityProvider.adminRemoveUserFromGroup(request);
     }
-    public void agregarRolCognitoUsuario(int idUsuario, int idRol){
+    public void agregarRolCognitoUsuario(String idUsuario, int idRol){
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         AdminAddUserToGroupRequest request = new AdminAddUserToGroupRequest()
@@ -116,7 +116,7 @@ public class CognitoService {
                 .withGroupName(rolEntity.getNombre());
         awsCognitoIdentityProvider.adminAddUserToGroup(request);
     }
-    public void habilitarUsuarioCognito(int idUsuario){
+    public void habilitarUsuarioCognito(String idUsuario){
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         AdminEnableUserRequest request = new AdminEnableUserRequest()
@@ -126,7 +126,7 @@ public class CognitoService {
         awsCognitoIdentityProvider.adminEnableUser(request);
     }
 
-    public void deshabilitarUsuarioCognito(int idUsuario){
+    public void deshabilitarUsuarioCognito(String idUsuario){
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         AdminDisableUserRequest request = new AdminDisableUserRequest()

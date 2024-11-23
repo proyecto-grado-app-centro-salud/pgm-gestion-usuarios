@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
@@ -30,8 +31,12 @@ import lombok.Setter;
 @Table(name = "usuario_rol")
 public class RolUsuarioEntity {
     
-    @EmbeddedId
-    private RolUsuarioId rolUsuarioId;
+    // @EmbeddedId
+    // private RolUsuarioId rolUsuarioId;
+    @Id
+    @Column(name = "id_usuario_rol")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idUsuarioRol;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol", nullable = false, insertable = false, updatable = false)

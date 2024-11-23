@@ -15,7 +15,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class PacienteDto {
 
-    private int idUsuario;
+    private String idUsuario;
 
     private String nombres;
 

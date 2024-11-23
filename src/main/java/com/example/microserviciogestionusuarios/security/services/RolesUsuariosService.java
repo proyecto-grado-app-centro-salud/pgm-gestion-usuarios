@@ -28,7 +28,7 @@ public class RolesUsuariosService {
     @Autowired
     ImagenesService imagenesService;
 
-    public List<RolDto> obtenerRolesDeUsuario(int idUsuario) {
+    public List<RolDto> obtenerRolesDeUsuario(String idUsuario) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -42,27 +42,32 @@ public class RolesUsuariosService {
         return rolesDtos;
     }
 
-    public void crearRolUsuario(int idUsuario, int idRol) {
+    public void crearRolUsuario(String idUsuario, int idRol) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()),rolEntity,usuarioEntity,null,null,null,null);
+        RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
+        rolUsuarioEntity.setRol(rolEntity);
+        rolUsuarioEntity.setUsuario(usuarioEntity);
         rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
         
         cognitoService.agregarRolCognitoUsuario(idUsuario, idRol);
     }
 
-    public void eliminarRolUsuario(int idUsuario, int idRol) {
+    public void eliminarRolUsuario(String idUsuario, int idRol) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
-        rolesUsuariosRepositoryJPA.deleteById(new RolUsuarioId(rolEntity.getIdRol(),usuarioEntity.getIdUsuario()));
+        RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findOneByUsuarioAndRol(usuarioEntity,rolEntity) 
+        .orElseThrow(() -> new RuntimeException("Rol usuario no encontrado"));
+
+        rolesUsuariosRepositoryJPA.deleteById(rolUsuarioEntity.getIdUsuarioRol());
 
         cognitoService.eliminarRolCognitoUsuario(idUsuario, idRol);
     }

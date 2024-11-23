@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UsuarioDto {
-    private Integer idUsuario;
+    private String idUsuario;
     private String nombres;
     private String ci;
     private String direccion;
@@ -29,7 +29,6 @@ public class UsuarioDto {
     private String sexo;
     private String estadoCivil;
     private Integer edad;
-    private Integer diasSancionPeticionFichaPresencial;
     private String telefono;
     private Date createdAt;
     private Date updatedAt;
@@ -51,7 +50,6 @@ public class UsuarioDto {
         userDto.setSexo(userEntity.getSexo());
         userDto.setEstadoCivil(userEntity.getEstadoCivil());
         userDto.setEdad(userEntity.getEdad());
-        userDto.setDiasSancionPeticionFichaPresencial(userEntity.getDiasSancionPeticionFichaPresencial());
         userDto.setTelefono(userEntity.getTelefono());
         userDto.setCreatedAt(userEntity.getCreatedAt());
         userDto.setUpdatedAt(userEntity.getUpdatedAt());

@@ -15,13 +15,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.microserviciogestionusuarios.security.dtos.UsuarioDto;
+import com.example.microserviciogestionusuarios.security.jwt.JwtProvider;
 import com.example.microserviciogestionusuarios.security.services.UsuariosService;
+import com.example.microserviciogestionusuarios.security.services.UserService;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.annotation.security.PermitAll;
@@ -31,6 +35,10 @@ import jakarta.annotation.security.PermitAll;
 public class UsuariosController {
     @Autowired
     private UsuariosService usuariosService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private JwtProvider jwtProvider;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(UsuariosController.class);
@@ -59,7 +67,7 @@ public class UsuariosController {
 
     @PermitAll
     @GetMapping(value = "/id/{idUsuario}")
-    public ResponseEntity<UsuarioDto> getUsuarioByCi(@PathVariable int idUsuario) {
+    public ResponseEntity<UsuarioDto> getUsuarioByIdUsuario(@PathVariable String idUsuario) {
         try {
             UsuarioDto userDto = usuariosService.obtenerUsuarioPorId(idUsuario);
             return new ResponseEntity<>(userDto, HttpStatus.OK);
@@ -67,7 +75,28 @@ public class UsuariosController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
+    @PermitAll
+    @GetMapping(value = "/codigo-verificacion/{idUsuario}")
+    public ResponseEntity<UsuarioDto> obtenerCodigoVerificacion(@PathVariable String idUsuario) {
+        try {
+            usuariosService.obtenerCodigoVerificacion(idUsuario);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+    @PermitAll
+    @PostMapping("/cambiar-contrasenia")
+    public ResponseEntity<Void> cambiarPassword(@RequestBody Map<String, String> body) {
+        try{
+            userService.cambiarPassword(body.get("username"), body.get("nuevoPassword"), body.get("codigoVerificacion"));
+            return new ResponseEntity<>(HttpStatus.OK);
+        }catch(Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PermitAll
     @PostMapping
     public ResponseEntity<UsuarioDto> createUsuario(@RequestParam("data") String data, @RequestParam Map<String, MultipartFile> allFiles) {
@@ -83,19 +112,20 @@ public class UsuariosController {
 
     @PermitAll
     @PutMapping(value = "/{idUsuario}")
-    public ResponseEntity<UsuarioDto> updateUsuario(@PathVariable int idUsuario, @RequestParam("data") String data,
+    public ResponseEntity<UsuarioDto> updateUsuario(@PathVariable String idUsuario, @RequestParam("data") String data,
     @RequestParam Map<String, String> params,@RequestParam Map<String, MultipartFile> allFiles) {
         try {
             UsuarioDto userDto = objectMapper.readValue(data, UsuarioDto.class);
             UsuarioDto updatedUsuario = usuariosService.actualizarUsuario(idUsuario, userDto, allFiles,params);
             return new ResponseEntity<>(updatedUsuario, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PermitAll
     @DeleteMapping(value = "/{idUsuario}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable int idUsuario) {
+    public ResponseEntity<Void> deleteUsuario(@PathVariable String idUsuario) {
         try {
             usuariosService.eliminarUsuario(idUsuario);
             return new ResponseEntity<>(HttpStatus.OK);
@@ -106,7 +136,7 @@ public class UsuariosController {
 
     @PermitAll
     @PutMapping(value = "/usuario-restaurado/{idUsuario}")
-    public ResponseEntity<Void> restaurarUsuario(@PathVariable int idUsuario) {
+    public ResponseEntity<Void> restaurarUsuario(@PathVariable String idUsuario) {
         try {
             usuariosService.restaurarUsuario(idUsuario);
             return new ResponseEntity<>(HttpStatus.OK);

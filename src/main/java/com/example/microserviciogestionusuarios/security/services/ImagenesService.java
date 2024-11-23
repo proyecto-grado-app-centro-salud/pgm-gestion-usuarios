@@ -24,10 +24,12 @@ import java.util.stream.Collectors;
 public class ImagenesService {
     @Autowired
     ImagenesRepositoryJPA imagenesRepositoryJPA;
+    @Autowired
+    S3Service s3Service;
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    public List<ImagenDto> obtenerImagenes(String imageableType, Integer imageableId) {
+    public List<ImagenDto> obtenerImagenes(String imageableType, String imageableId) {
         List<ImagenEntity>imagenesEntities=imagenesRepositoryJPA.findByImageableTypeAndImageableIdAndDeletedAtIsNull(imageableType, imageableId);
         List<ImagenDto>imagenesDtos=new ArrayList<ImagenDto>();
         for(ImagenEntity imagenEntity:imagenesEntities){
@@ -36,18 +38,24 @@ public class ImagenesService {
         }
         return imagenesDtos;
     }
-    public void guardarImagenes(List<MultipartFile> imagenes, String imageableType, int imageableId) {
-        for (MultipartFile imagen : imagenes) {
-            if (imagen != null && !imagen.isEmpty()) {
-                ImagenEntity imagenEntity = new ImagenEntity();
-                imagenEntity.setImageableType(imageableType);
-                imagenEntity.setImageableId(imageableId);
-                imagenEntity.setNombre(imagen.getOriginalFilename());
-                imagenEntity.setTipo(imagen.getContentType());                
-                imagenEntity.setUrl("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNBVh79jGaH-D21r7geT8NSnFWIqqAVEbFvA&s");
-                imagenesRepositoryJPA.save(imagenEntity);
+    public void guardarImagenes(List<MultipartFile> imagenes, String imageableType, String imageableId) {
+        try {
+            for (MultipartFile imagen : imagenes) {
+                if (imagen != null && !imagen.isEmpty()) {
+                    ImagenEntity imagenEntity = new ImagenEntity();
+                    imagenEntity.setImageableType(imageableType);
+                    imagenEntity.setImageableId(imageableId);
+                    imagenEntity.setNombre(imagen.getOriginalFilename());
+                    imagenEntity.setTipo(imagen.getContentType());     
+                    String url = s3Service.uploadFile(imagen);           
+                    imagenEntity.setUrl(url);
+                    imagenesRepositoryJPA.save(imagenEntity);
+                }
             }
+        }catch(Exception e){
+            throw new RuntimeException(e);
         }
+        
     }
     public List<MultipartFile> obtenerImagenesDeArchivos(Map<String, MultipartFile> archivos){
         List<MultipartFile> imagenes = new ArrayList<>();
@@ -72,15 +80,18 @@ public class ImagenesService {
         return imagenes;
     }
     public void actualizarImagenes(Map<String, MultipartFile> allFiles, Map<String, String> params,
-            String imagableType, int imageableId) {
+            String imagableType, String imageableId) {
         List<ImagenDto>imagenesAEliminar=obtenerImagenesAEliminar(params,imagableType,imageableId);
         List<MultipartFile> imagenes=obtenerImagenesDeArchivos(allFiles);
         guardarImagenes(imagenes,imagableType,imageableId);
+        eliminarImagenes(imagenesAEliminar);
+    }
+    public void eliminarImagenes(List<ImagenDto> imagenesAEliminar) {
         for(ImagenDto imagen: imagenesAEliminar){
             imagenesRepositoryJPA.deleteById(imagen.getIdImagen());
         }
     }
-    private List<ImagenDto> obtenerImagenesAEliminar(Map<String, String> params,String imagableType, int imageableId) {
+    private List<ImagenDto> obtenerImagenesAEliminar(Map<String, String> params,String imagableType, String imageableId) {
         List<ImagenDto> imagenesElemento=obtenerImagenes(imagableType, imageableId);
         List<ImagenDto> imagenesConservadas=obtenerImagenesDeParametros(params);      
         List<ImagenDto> imagenesAEliminar=quitarImagenes(imagenesElemento, imagenesConservadas);

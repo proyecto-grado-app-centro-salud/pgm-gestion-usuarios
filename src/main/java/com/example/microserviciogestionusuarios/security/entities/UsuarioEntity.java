@@ -28,7 +28,7 @@ public class UsuarioEntity {
 
     @Id
     @Column(name = "id_usuario")
-    private int idUsuario;
+    private String idUsuario;
 
     @Column(name = "nombres")
     private String nombres;
@@ -67,11 +67,11 @@ public class UsuarioEntity {
     @Column(name = "edad")
     private Integer edad;
 
-    @Column(name = "dias_sancion_peticion_ficha_presencial")
-    private Integer diasSancionPeticionFichaPresencial;
-
     @Column(name = "telefono")
     private String telefono;
+
+    @Column(name = "codigo_verificacion")
+    private String codigoVerificacion;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_at", nullable = false, updatable = false)

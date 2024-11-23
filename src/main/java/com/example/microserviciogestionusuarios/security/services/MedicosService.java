@@ -40,12 +40,12 @@ public class MedicosService {
         .collect(Collectors.toList());
         return listadoMedicos;
     }
-    public MedicoDto obtenerMedicoEspecialitas(int idMedico) {
+    public MedicoDto obtenerMedicoEspecialitas(String idMedico) {
         RolEntity rolEntity = rolesRepositoryJPA.findById(2)
         .orElseThrow(()-> new RuntimeException("Rol no encontrado"));
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idMedico)
         .orElseThrow(()-> new RuntimeException("Medico no encontrado"));
-        RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findById(new RolUsuarioId(rolEntity.getIdRol(),idMedico))
+        RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findOneByUsuarioAndRol(usuarioEntity,rolEntity)
         .orElseThrow(()-> new RuntimeException("Rol usuario no encontrado"));
         MedicoDto medicoDto = new MedicoDto().convertirRolUsuarioEntityAMedicoDto(rolUsuarioEntity);
         medicoDto.setImagenes(imagenesService.obtenerImagenes("medicos", rolUsuarioEntity.getUsuario().getIdUsuario()));

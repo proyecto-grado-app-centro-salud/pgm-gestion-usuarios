@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.example.microserviciogestionusuarios.security.dtos.RolDto;
@@ -27,6 +28,8 @@ public class RolesUsuariosService {
     CognitoService cognitoService;
     @Autowired
     ImagenesService imagenesService;
+    @Autowired
+    private RolesPermisosService rolesPermisosService;
 
     public List<RolDto> obtenerRolesDeUsuario(String idUsuario) {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
@@ -42,13 +45,37 @@ public class RolesUsuariosService {
         return rolesDtos;
     }
 
-    public void crearRolUsuario(String idUsuario, int idRol) {
+    // public void crearRolUsuario(String idUsuario, int idRol,Authentication authentication) throws Exception {
+    //     UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
+    //     .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    //     RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
+    //     .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
+    //     if (idRol==2 && (!rolesPermisosService.hasAdminRole(authentication) || !rolesPermisosService.hasSuperusuarioRole(authentication))) {
+    //         throw new Exception("No tienes permisos para asignar roles");
+    //     }
+    //     if (idRol==1 && (!rolesPermisosService.hasAdminRole(authentication) || !rolesPermisosService.hasSuperusuarioRole(authentication))) {
+    //         throw new Exception("No tienes permisos para asignar roles");
+    //     }
+    //     if (idRol==3 && (!rolesPermisosService.hasSuperusuarioRole(authentication))) {
+    //         throw new Exception("No tienes permisos para asignar roles");
+    //     }
+    //     RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
+    //     rolUsuarioEntity.setRol(rolEntity);
+    //     rolUsuarioEntity.setUsuario(usuarioEntity);
+    //     rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
+        
+    //     cognitoService.agregarRolCognitoUsuario(idUsuario, idRol);
+    // }
+    public void crearRolUsuario(String idUsuario, int idRol) throws Exception {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
         .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
+       
         RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
         rolUsuarioEntity.setRol(rolEntity);
         rolUsuarioEntity.setUsuario(usuarioEntity);

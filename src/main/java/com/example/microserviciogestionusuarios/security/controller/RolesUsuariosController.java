@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,9 +33,22 @@ public class RolesUsuariosController {
     }
 
 
+    // @PostMapping(value = "/{idUsuario}/roles/{idRol}")
+    // public ResponseEntity<Void> createRolUsuario(@PathVariable String idUsuario,@PathVariable int idRol,Authentication authentication) {
+    //     try {
+
+    //         rolesUsuariosService.crearRolUsuario(idUsuario, idRol,authentication);
+    //         return new ResponseEntity<>(HttpStatus.OK);
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+
+    //         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    //     }
+    // }
     @PostMapping(value = "/{idUsuario}/roles/{idRol}")
     public ResponseEntity<Void> createRolUsuario(@PathVariable String idUsuario,@PathVariable int idRol) {
         try {
+
             rolesUsuariosService.crearRolUsuario(idUsuario, idRol);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {

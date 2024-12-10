@@ -48,15 +48,20 @@ public class AuthController {
     @PermitAll
     @PostMapping("/sign-in")
     public ResponseEntity<ResponseMessageDto> signInUser(@RequestBody @Valid SignInDto signInDto, BindingResult bindingResult){
-        if (bindingResult.hasFieldErrors()) {
-            return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
+        try {
+            if (bindingResult.hasFieldErrors()) {
+                return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
+            }
+            String accessToken = userService.iniciarSesionUsuarioCognito(signInDto);
+            // UserDetails userDetails = userDetailsService.loadUserByUsername(signInDto.getEmail());
+            // UsernamePasswordAuthenticationToken authentication =
+            //         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            // SecurityContextHolder.getContext().setAuthentication(authentication);
+            return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto(accessToken), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<ResponseMessageDto>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        String accessToken = userService.iniciarSesionUsuarioCognito(signInDto);
-        // UserDetails userDetails = userDetailsService.loadUserByUsername(signInDto.getEmail());
-        // UsernamePasswordAuthenticationToken authentication =
-        //         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-        // SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto(accessToken), HttpStatus.OK);
     }
 
     // @GetMapping("/user-details")

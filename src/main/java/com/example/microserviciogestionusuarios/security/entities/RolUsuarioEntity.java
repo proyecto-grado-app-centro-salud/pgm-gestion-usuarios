@@ -39,11 +39,11 @@ public class RolUsuarioEntity {
     private Integer idUsuarioRol;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_rol", nullable = false)
     private RolEntity rol;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
     private UsuarioEntity usuario;
 
     @Column(name = "anios_experiencia")

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.microserviciogestionusuarios.dtos.ResponseMessageDto;
 import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
 import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
 import com.example.microserviciogestionusuarios.security.repositories.MedicoRepository;
@@ -63,8 +64,14 @@ public class MedicosController {
     @PermitAll
     @PostMapping
     public ResponseEntity<ApiResponse> registroMedico(@RequestBody MedicoEntity medicoEntity) {
-        medicoRepository.save(medicoEntity);
-        return new ResponseEntity<ApiResponse>(new ApiResponse("","Ok"), HttpStatus.OK);
+        try {
+            medicoRepository.save(medicoEntity);
+            return new ResponseEntity<ApiResponse>(new ApiResponse("","Ok"), HttpStatus.OK);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<ApiResponse>(HttpStatus.OK);
+        }
+       
     }
     @PermitAll
     @PutMapping("/{id}")

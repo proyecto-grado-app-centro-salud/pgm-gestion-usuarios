@@ -1,5 +1,4 @@
 package com.example.microserviciogestionusuarios.security.jwt;
-import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
 import com.example.microserviciogestionusuarios.security.services.UserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -8,6 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.RSAKeyProvider;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,11 +30,15 @@ public class JwtProvider {
     @Value(value = "${aws.cognito.issuer}")
     private String issuer;
 
+
+    @Value(value =  "${aws.cognito.jwk}")
+    private String jwkUrl;
+
     private static final String USERNAME = "username";
 
     public DecodedJWT getDecodedJwt(String token) {
         String tokenWithoutBearer = token.startsWith("Bearer ") ? token.substring("Bearer ".length()) : token;
-        RSAKeyProvider keyProvider = new AwsCognitoRSAKeyProvider(region, identityPoolUrl);
+        RSAKeyProvider keyProvider = new AwsCognitoRSAKeyProvider(region, identityPoolUrl,jwkUrl);
         Algorithm algorithm = Algorithm.RSA256(keyProvider);
         JWTVerifier verifier = JWT.require(algorithm).withIssuer(issuer).build();
         verifier.verify(tokenWithoutBearer);
@@ -55,6 +60,13 @@ public class JwtProvider {
             log.error("Validate token failed: " + exception.getMessage());
         }
         return false;
+    }
+
+
+    public List<String> getRolesFromToken(String token) {
+        final String keyRoles="cognito:groups";
+        DecodedJWT jwt = getDecodedJwt(token);
+        return jwt.getClaim(keyRoles).asList(String.class); 
     }
 
 

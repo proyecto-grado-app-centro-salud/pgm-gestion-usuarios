@@ -1,15 +1,20 @@
 package com.example.microserviciogestionusuarios.security.services;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.PermissionDeniedDataAccessException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.example.microserviciogestionusuarios.security.dtos.RolDto;
 import com.example.microserviciogestionusuarios.security.entities.RolEntity;
 import com.example.microserviciogestionusuarios.security.entities.RolUsuarioEntity;
+import com.example.microserviciogestionusuarios.security.entities.UserMain;
 import com.example.microserviciogestionusuarios.security.entities.UsuarioEntity;
 import com.example.microserviciogestionusuarios.security.modelo.ids_embebidos.RolUsuarioId;
 import com.example.microserviciogestionusuarios.security.repositories.RolesRepositoryJPA;
@@ -75,13 +80,32 @@ public class RolesUsuariosService {
         RolEntity rolEntity = rolesRepositoryJPA.findById(idRol)
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
+        if(idRol==4){
+            throw new Exception("No puede agregar un rol superusuario");
+        }
+        if(idRol==3){
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null) {
+                Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+                boolean tieneRolSuperUsuario = authorities.stream()
+                .anyMatch(authority -> "SUPERUSUARIO".equals(authority.getAuthority()));
+                if(!tieneRolSuperUsuario) throw new Exception("No tienes permiso para agregar el rol administrador");
+                RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
+                rolUsuarioEntity.setRol(rolEntity);
+                rolUsuarioEntity.setUsuario(usuarioEntity);
+                rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
+                
+                cognitoService.agregarRolCognitoUsuario(idUsuario, idRol);
+            }
+        }else{
+            RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
+            rolUsuarioEntity.setRol(rolEntity);
+            rolUsuarioEntity.setUsuario(usuarioEntity);
+            rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
+            
+            cognitoService.agregarRolCognitoUsuario(idUsuario, idRol);
+        }
        
-        RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
-        rolUsuarioEntity.setRol(rolEntity);
-        rolUsuarioEntity.setUsuario(usuarioEntity);
-        rolesUsuariosRepositoryJPA.save(rolUsuarioEntity);
-        
-        cognitoService.agregarRolCognitoUsuario(idUsuario, idRol);
     }
 
     public void eliminarRolUsuario(String idUsuario, int idRol) {

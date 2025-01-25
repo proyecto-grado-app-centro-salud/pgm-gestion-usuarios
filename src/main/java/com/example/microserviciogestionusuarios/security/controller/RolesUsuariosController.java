@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,12 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.microserviciogestionusuarios.security.dtos.RolDto;
 import com.example.microserviciogestionusuarios.security.services.RolesUsuariosService;
 
+import jakarta.annotation.security.PermitAll;
+
 @RestController
 @RequestMapping("/v1.0/usuarios")
 public class RolesUsuariosController {
     @Autowired
     private RolesUsuariosService rolesUsuariosService;
 
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR','SUPERUSUARIO')")
     @GetMapping(value = "/{idUsuario}/roles")
     public ResponseEntity<List<RolDto>> getRolesUsuario(@PathVariable String idUsuario) {
         try {
@@ -45,6 +49,7 @@ public class RolesUsuariosController {
     //         return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     //     }
     // }
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR','SUPERUSUARIO')")
     @PostMapping(value = "/{idUsuario}/roles/{idRol}")
     public ResponseEntity<Void> createRolUsuario(@PathVariable String idUsuario,@PathVariable int idRol) {
         try {
@@ -58,6 +63,7 @@ public class RolesUsuariosController {
         }
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR','SUPERUSUARIO')")
     @DeleteMapping("/{idUsuario}/roles/{idRol}")
     public ResponseEntity<Void> deleteRolUsuario(@PathVariable String idUsuario,@PathVariable int idRol) {
         try {

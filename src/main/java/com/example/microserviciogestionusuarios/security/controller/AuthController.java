@@ -1,38 +1,20 @@
 package com.example.microserviciogestionusuarios.security.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.microserviciogestionusuarios.dtos.ResponseMessageDto;
-import com.example.microserviciogestionusuarios.security.dtos.AdministradorDto;
-import com.example.microserviciogestionusuarios.security.dtos.MedicoDto;
-import com.example.microserviciogestionusuarios.security.dtos.PacienteDto;
 import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
-import com.example.microserviciogestionusuarios.security.dtos.UserDetailsDto;
-import com.example.microserviciogestionusuarios.security.entities.AdministradorEntity;
-import com.example.microserviciogestionusuarios.security.entities.MedicoEntity;
-import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
-import com.example.microserviciogestionusuarios.security.services.UserDetailsServiceImpl;
 import com.example.microserviciogestionusuarios.security.services.UserService;
 
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
 import jakarta.annotation.security.PermitAll;
 @RestController
 @RequestMapping(path = "/auth")
@@ -42,8 +24,7 @@ public class AuthController {
     private UserService userService;
 
 
-    @Autowired
-    private UserDetailsServiceImpl userDetailsService;
+
 
     @PermitAll
     @PostMapping("/sign-in")
@@ -53,10 +34,6 @@ public class AuthController {
                 return new ResponseEntity<>(new ResponseMessageDto(bindingResult.getFieldError().getDefaultMessage()), HttpStatus.BAD_REQUEST);
             }
             String accessToken = userService.iniciarSesionUsuarioCognito(signInDto);
-            // UserDetails userDetails = userDetailsService.loadUserByUsername(signInDto.getEmail());
-            // UsernamePasswordAuthenticationToken authentication =
-            //         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            // SecurityContextHolder.getContext().setAuthentication(authentication);
             return new ResponseEntity<ResponseMessageDto>(new ResponseMessageDto(accessToken), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();

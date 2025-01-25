@@ -44,7 +44,8 @@ public class PacientesController {
     //@PermitAll
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'MEDICO')")
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR', 'MEDICO')")
-    @PermitAll
+
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR','MEDICO')")
     @GetMapping
     public ResponseEntity<List<PacienteDto>> listadoPacientes() {
         try{
@@ -62,23 +63,23 @@ public class PacientesController {
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en la peticion"));
     }
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<ApiResponse> registroPaciente(@RequestBody PacienteDto pacienteDto) {
         pacienteService.registroPaciente(pacienteDto);
         return new ResponseEntity<ApiResponse>(new ApiResponse("","OK"), HttpStatus.OK);
     }
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @DeleteMapping("/{idPaciente}")
     public @ResponseBody ApiResponse eliminarPaciente(@PathVariable int idPaciente) {
         pacienteRepository.deleteById(idPaciente);
         return new ApiResponse("200","Ok");
     }
     //@PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PutMapping("/{id}")
-    public @ResponseBody PacienteEntity actualizarReceta(@PathVariable Integer id, @RequestBody PacienteEntity actualizada) {
+    public @ResponseBody PacienteEntity actualizarPaciente(@PathVariable Integer id, @RequestBody PacienteEntity actualizada) {
         return pacienteRepository.findById(id)
                 .map(paciente -> {
                     paciente.setApellidoPaterno(actualizada.getApellidoPaterno());

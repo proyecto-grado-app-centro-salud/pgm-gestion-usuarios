@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -61,7 +62,7 @@ public class MedicosController {
         // .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error en la peticion"));
     }
 
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PostMapping
     public ResponseEntity<ApiResponse> registroMedico(@RequestBody MedicoEntity medicoEntity) {
         try {
@@ -73,7 +74,7 @@ public class MedicosController {
         }
        
     }
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PutMapping("/{id}")
     public @ResponseBody MedicoEntity actualizar(@PathVariable Integer id, @RequestBody MedicoEntity actualizada) {
         return medicoRepository.findById(id)
@@ -97,7 +98,7 @@ public class MedicosController {
                     return new MedicoEntity();
                 });
     }
-        @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @DeleteMapping("/{idMedico}")
     public @ResponseBody ApiResponse eliminarPaciente(@PathVariable int idMedico) {
         medicoRepository.deleteById(idMedico);

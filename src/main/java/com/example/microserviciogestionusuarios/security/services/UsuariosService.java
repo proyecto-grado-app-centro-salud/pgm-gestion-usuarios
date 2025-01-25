@@ -134,7 +134,7 @@ public class UsuariosService {
         cognitoService.habilitarUsuarioCognito(idUsuario);
     }
     public UsuarioDto obtenerUsuarioPorId(String idUsuario) {
-        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario)
+        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         UsuarioDto usuarioDto = new UsuarioDto().convertirUsuarioEntityAUsuarioDto(usuarioEntity);
         List<ImagenDto> imagenes = imagenesService.obtenerImagenes("usuarios", usuarioEntity.getIdUsuario());
@@ -142,7 +142,7 @@ public class UsuariosService {
         return usuarioDto;
     }
     public void obtenerCodigoVerificacion(String idUsuario) {
-        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById(idUsuario)
+        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         final String codigoVerificacion=UUID.randomUUID().toString();
         emailService.sendSimpleEmail(usuarioEntity.getEmail(), "Codigo de verificacion",codigoVerificacion);

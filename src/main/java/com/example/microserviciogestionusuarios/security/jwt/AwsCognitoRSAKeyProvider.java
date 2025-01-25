@@ -14,16 +14,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.Optional;
 
 public class AwsCognitoRSAKeyProvider implements RSAKeyProvider {
     private final URL awsStoreUrl;
     private final JwkProvider provider;
     Logger logger = LoggerFactory.getLogger(UserService.class);
-
-    @Value("${aws.cognito.jwk}")
-    private String jwkUrl;
-    public AwsCognitoRSAKeyProvider(String awsCognitoRegion, String identityPoolUrl) {
-        String jwkUrl = this.jwkUrl;
+    
+    public AwsCognitoRSAKeyProvider(String awsCognitoRegion, String identityPoolUrl,String jwkUrl) {
         logger.info("AwsCognitoRSAKeyProvider jwkUrl="+jwkUrl);
         String url = String.format(jwkUrl, awsCognitoRegion, identityPoolUrl);
         try {

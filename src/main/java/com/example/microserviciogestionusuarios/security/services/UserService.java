@@ -141,7 +141,7 @@ public class UserService {
 
     // }
     public void cambiarPassword(String username, String nuevoPassword,String codigoVerificacion) {
-        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findById((username)).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull((username)).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         if(usuarioEntity.getCodigoVerificacion().equals(codigoVerificacion)){
             usuarioEntity.setCodigoVerificacion(null);
             usuariosRepositoryJPA.save(usuarioEntity);

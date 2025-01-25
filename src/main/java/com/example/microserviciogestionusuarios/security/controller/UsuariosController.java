@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -97,7 +98,7 @@ public class UsuariosController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR','SUPERUSUARIO')")
     @PostMapping
     public ResponseEntity<UsuarioDto> createUsuario(@RequestParam("data") String data, @RequestParam Map<String, MultipartFile> allFiles) {
         try {
@@ -110,7 +111,7 @@ public class UsuariosController {
         }
     }
 
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR','SUPERUSUARIO')")
     @PutMapping(value = "/{idUsuario}")
     public ResponseEntity<UsuarioDto> updateUsuario(@PathVariable String idUsuario, @RequestParam("data") String data,
     @RequestParam Map<String, String> params,@RequestParam Map<String, MultipartFile> allFiles) {
@@ -123,7 +124,7 @@ public class UsuariosController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @DeleteMapping(value = "/{idUsuario}")
     public ResponseEntity<Void> deleteUsuario(@PathVariable String idUsuario) {
         try {
@@ -134,7 +135,7 @@ public class UsuariosController {
         }
     }
 
-    @PermitAll
+    @PreAuthorize("hasAnyAuthority('ADMINISTRADOR')")
     @PutMapping(value = "/usuario-restaurado/{idUsuario}")
     public ResponseEntity<Void> restaurarUsuario(@PathVariable String idUsuario) {
         try {

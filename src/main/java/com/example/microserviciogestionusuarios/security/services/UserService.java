@@ -43,6 +43,7 @@ import com.example.microserviciogestionusuarios.security.repositories.MedicoRepo
 import com.example.microserviciogestionusuarios.security.repositories.PacienteRepository;
 import com.example.microserviciogestionusuarios.security.repositories.RolesRepositoryJPA;
 import com.example.microserviciogestionusuarios.security.repositories.UsuariosRepositoryJPA;
+import com.example.microserviciogestionusuarios.security.util.exceptions.BusinessValidationException;
 
 @Service
 public class UserService {
@@ -62,7 +63,8 @@ public class UserService {
     @Autowired
     private UsuariosRepositoryJPA usuariosRepositoryJPA;
 
-
+    @Autowired
+    private RolesUsuariosService rolesUsuariosService;
 
     @Autowired
     private RolesRepositoryJPA rolesRepositoryJPA;
@@ -155,6 +157,19 @@ public class UserService {
         }else{
             throw new RuntimeException("Codigo de verificacion incorrecto");
         }
+    }
+    public void cambiarPasswordAdm(String username, String nuevoPassword) throws Exception{
+
+        UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull((username)).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        boolean tieneRolSuperUsuario=rolesUsuariosService.obtenerRolesDeUsuario(usuarioEntity.getIdUsuario()).stream().anyMatch(rol->"SUPERUSUARIO".equals(rol.getNombre()));
+        if(tieneRolSuperUsuario)throw new BusinessValidationException("No se puede cambiar la contraseña de un superusuario");
+        AdminSetUserPasswordRequest passwordRequest = new AdminSetUserPasswordRequest()
+                    .withUsername(username)
+                    .withUserPoolId(userPoolId) 
+                    .withPassword(nuevoPassword) 
+                    .withPermanent(true);
+
+        AdminSetUserPasswordResult response = awsCognitoIdentityProvider.adminSetUserPassword(passwordRequest);
     }
     public Optional<PacienteEntity> findByEmailPaciente(String email) {
         return pacienteRepository.findByEmail(email);

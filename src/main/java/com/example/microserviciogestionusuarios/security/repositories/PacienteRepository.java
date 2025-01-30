@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.microserviciogestionusuarios.security.entities.PacienteEntity;
 
-public interface PacienteRepository extends JpaRepository<PacienteEntity, Integer>{
+public interface PacienteRepository extends JpaRepository<PacienteEntity, String>{
     Optional<PacienteEntity> findByEmail(String email);
 
 }

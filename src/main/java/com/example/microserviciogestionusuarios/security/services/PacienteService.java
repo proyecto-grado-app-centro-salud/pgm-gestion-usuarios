@@ -49,7 +49,7 @@ public class PacienteService {
         .stream()
         .map(rolUsuarioEntity->{
             PacienteDto medicoDto = new PacienteDto().convertirRolUsuarioEntityAPacienteDto(rolUsuarioEntity);
-            medicoDto.setImagenes(imagenesService.obtenerImagenes("pacientes", rolUsuarioEntity.getUsuario().getIdUsuario()));
+            medicoDto.setImagenes(imagenesService.obtenerImagenes("usuarios", rolUsuarioEntity.getUsuario().getIdUsuario()));
             return medicoDto;
         })
         .collect(Collectors.toList());

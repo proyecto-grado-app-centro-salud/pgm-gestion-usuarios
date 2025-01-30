@@ -2,12 +2,14 @@ package com.example.microserviciogestionusuarios.security.services;
 
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,9 +21,11 @@ import com.amazonaws.services.cognitoidp.model.AttributeType;
 import com.amazonaws.services.cognitoidp.model.SignUpRequest;
 import com.amazonaws.services.cognitoidp.model.SignUpResult;
 import com.example.microserviciogestionusuarios.security.dtos.ImagenDto;
+import com.example.microserviciogestionusuarios.security.dtos.RolDto;
 import com.example.microserviciogestionusuarios.security.dtos.UsuarioDto;
 import com.example.microserviciogestionusuarios.security.entities.UsuarioEntity;
 import com.example.microserviciogestionusuarios.security.repositories.UsuariosRepositoryJPA;
+import com.example.microserviciogestionusuarios.security.util.exceptions.BusinessValidationException;
 
 @Service
 public class UsuariosService {
@@ -33,6 +37,9 @@ public class UsuariosService {
 
     @Autowired
     CognitoService cognitoService;
+
+    @Autowired
+    RolesUsuariosService rolesUsuariosService;
 
     @Autowired
     EmailService emailService;
@@ -118,9 +125,13 @@ public class UsuariosService {
         return new UsuarioDto().convertirUsuarioEntityAUsuarioDto(updatedEntity);
     }
 
-    public void eliminarUsuario(String idUsuario) {
+    public void eliminarUsuario(String idUsuario) throws Exception {
         UsuarioEntity usuarioEntity = usuariosRepositoryJPA.findByIdUsuarioAndDeletedAtIsNull(idUsuario)
             .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<RolDto>rolesUsuario=rolesUsuariosService.obtenerRolesDeUsuario(usuarioEntity.getIdUsuario());
+        boolean tieneRolSuperUsuario = rolesUsuario.stream()
+                .anyMatch(rol -> "SUPERUSUARIO".equals(rol.getNombre()));
+        if(tieneRolSuperUsuario) throw new BusinessValidationException("No se puede eliminar superusuario");
         usuarioEntity.markAsDeleted();
         usuariosRepositoryJPA.save(usuarioEntity);
         cognitoService.deshabilitarUsuarioCognito(idUsuario);

@@ -24,7 +24,6 @@ import com.example.microserviciogestionusuarios.security.util.ApiResponse;
 
 import jakarta.annotation.security.PermitAll;
 
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping(path="/pacientes")
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,RequestMethod.OPTIONS})
 public class PacientesController {
     @Autowired
     PacienteRepository pacienteRepository;

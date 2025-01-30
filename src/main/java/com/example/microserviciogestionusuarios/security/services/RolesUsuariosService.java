@@ -20,6 +20,7 @@ import com.example.microserviciogestionusuarios.security.modelo.ids_embebidos.Ro
 import com.example.microserviciogestionusuarios.security.repositories.RolesRepositoryJPA;
 import com.example.microserviciogestionusuarios.security.repositories.RolesUsuariosRepositoryJPA;
 import com.example.microserviciogestionusuarios.security.repositories.UsuariosRepositoryJPA;
+import com.example.microserviciogestionusuarios.security.util.exceptions.BusinessValidationException;
 
 @Service
 public class RolesUsuariosService {
@@ -81,7 +82,7 @@ public class RolesUsuariosService {
         .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         if(idRol==4){
-            throw new Exception("No puede agregar un rol superusuario");
+            throw new BusinessValidationException("No puede agregar un rol superusuario");
         }
         if(idRol==3){
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -89,7 +90,7 @@ public class RolesUsuariosService {
                 Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
                 boolean tieneRolSuperUsuario = authorities.stream()
                 .anyMatch(authority -> "SUPERUSUARIO".equals(authority.getAuthority()));
-                if(!tieneRolSuperUsuario) throw new Exception("No tienes permiso para agregar el rol administrador");
+                if(!tieneRolSuperUsuario) throw new BusinessValidationException("No tienes permiso para agregar el rol administrador");
                 RolUsuarioEntity rolUsuarioEntity=new RolUsuarioEntity();
                 rolUsuarioEntity.setRol(rolEntity);
                 rolUsuarioEntity.setUsuario(usuarioEntity);
@@ -118,6 +119,10 @@ public class RolesUsuariosService {
         RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findOneByUsuarioAndRol(usuarioEntity,rolEntity) 
         .orElseThrow(() -> new RuntimeException("Rol usuario no encontrado"));
 
+
+        if(idRol==4){
+            throw new BusinessValidationException("No puede eliminar un rol superusuario");
+        }
         rolesUsuariosRepositoryJPA.deleteById(rolUsuarioEntity.getIdUsuarioRol());
 
         cognitoService.eliminarRolCognitoUsuario(idUsuario, idRol);

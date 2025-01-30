@@ -120,8 +120,8 @@
 			<version>2.20.9</version>
 		</dependency>
 	</dependencies>
-	<dependencyManagement>
-		<!-- <dependencies>
+	<!-- <dependencyManagement>
+		<dependencies>
 		<dependency>
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-dependencies</artifactId>
@@ -129,8 +129,8 @@
 		<type>pom</type>
 		<scope>import</scope>
 		</dependency>
-		</dependencies> -->
-	</dependencyManagement>
+		</dependencies>
+	</dependencyManagement> -->
 	<build>
 		<plugins>
 			<plugin>

@@ -34,7 +34,7 @@ public class MedicosService {
         .stream()
         .map(rolUsuarioEntity->{
             MedicoDto medicoDto = new MedicoDto().convertirRolUsuarioEntityAMedicoDto(rolUsuarioEntity);
-            medicoDto.setImagenes(imagenesService.obtenerImagenes("medicos", rolUsuarioEntity.getUsuario().getIdUsuario()));
+            medicoDto.setImagenes(imagenesService.obtenerImagenes("usuarios", rolUsuarioEntity.getUsuario().getIdUsuario()));
             return medicoDto;
         })
         .collect(Collectors.toList());
@@ -48,7 +48,7 @@ public class MedicosService {
         RolUsuarioEntity rolUsuarioEntity=rolesUsuariosRepositoryJPA.findOneByUsuarioAndRol(usuarioEntity,rolEntity)
         .orElseThrow(()-> new RuntimeException("Rol usuario no encontrado"));
         MedicoDto medicoDto = new MedicoDto().convertirRolUsuarioEntityAMedicoDto(rolUsuarioEntity);
-        medicoDto.setImagenes(imagenesService.obtenerImagenes("medicos", rolUsuarioEntity.getUsuario().getIdUsuario()));
+        medicoDto.setImagenes(imagenesService.obtenerImagenes("usuarios", rolUsuarioEntity.getUsuario().getIdUsuario()));
         return medicoDto;
     }
     

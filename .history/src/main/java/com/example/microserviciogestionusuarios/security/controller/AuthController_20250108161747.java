@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.microserviciogestionusuarios.dtos.ResponseMessageDto;
@@ -15,13 +14,10 @@ import com.example.microserviciogestionusuarios.security.dtos.SignInDto;
 import com.example.microserviciogestionusuarios.security.services.UserService;
 
 import jakarta.validation.Valid;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.annotation.security.PermitAll;
 @RestController
 @RequestMapping(path = "/auth")
-@CrossOrigin(origins = "*", allowedHeaders = "*", methods = {RequestMethod.DELETE, RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,RequestMethod.OPTIONS})
 public class AuthController {
     
     @Autowired
